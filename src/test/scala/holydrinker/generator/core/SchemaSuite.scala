@@ -1,10 +1,11 @@
-import holydrinker.generator.core.{ DataTypeString, Field, RowFields, SchemaValidationService }
+package holydrinker.generator.core
+
 import org.scalatest._
 
 class SchemaSuite extends FlatSpec with Matchers {
 
   it should "validate a trivial schema" in {
-    val trivialSchemaPath  = "trivialSchema.txt"
+    val trivialSchemaPath  = "/trivialSchema.txt"
     val trivialSchemaInput = getClass.getResourceAsStream(trivialSchemaPath)
     val actual             = SchemaValidationService.extractRowFieldsFromStream(trivialSchemaInput)
     val expected           = Right(Seq(RowFields("name", "string"), RowFields("surname", "string")))
@@ -12,7 +13,7 @@ class SchemaSuite extends FlatSpec with Matchers {
   }
 
   it should "not validate a trivial invalid schema" in {
-    val trivialSchemaPath  = "trivialInvalidSchema.txt"
+    val trivialSchemaPath  = "/trivialInvalidSchema.txt"
     val trivialSchemaInput = getClass.getResourceAsStream(trivialSchemaPath)
     val actual             = SchemaValidationService.extractRowFieldsFromStream(trivialSchemaInput)
     val expected           = Left("Invalid schema syntax: [a wrong field]")
