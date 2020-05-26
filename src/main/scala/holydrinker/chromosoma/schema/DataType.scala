@@ -1,4 +1,4 @@
-package holydrinker.chromosoma.core
+package holydrinker.chromosoma.schema
 
 sealed trait DataType
 

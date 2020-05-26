@@ -1,16 +1,19 @@
-package holydrinker.chromosoma.core
+package holydrinker.chromosoma.schema
 
 import java.io.InputStream
+
+import holydrinker.chromosoma.schema
+import holydrinker.chromosoma.validation.SchemaValidationService
 
 case class Field(name: String, dataType: DataType)
 
 case class RowFields(name: String, datatype: String) {
   def validate(): Either[String, Field] =
     datatype match {
-      case "string"  => Right(Field(name, ChromoString))
-      case "decimal" => Right(Field(name, ChromoDecimal))
-      case "int"     => Right(Field(name, DataTypeInt))
-      case "boolean" => Right(Field(name, DataTypeBoolean))
+      case "string"  => Right(Field(name, String))
+      case "decimal" => Right(Field(name, Decimal))
+      case "int"     => Right(Field(name, Int))
+      case "boolean" => Right(Field(name, Boolean))
       case _         => Left(name)
     }
 }
@@ -34,7 +37,7 @@ object Schema {
         throw new Exception(errorMessage)
     }
 
-    Schema(fields)
+    schema.Schema(fields)
   }
 
 }
