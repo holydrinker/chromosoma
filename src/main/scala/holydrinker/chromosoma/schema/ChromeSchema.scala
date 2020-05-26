@@ -1,4 +1,4 @@
-package holydrinker.generator.core
+package holydrinker.chromosoma.core
 
 import java.io.InputStream
 
@@ -7,8 +7,8 @@ case class Field(name: String, dataType: DataType)
 case class RowFields(name: String, datatype: String) {
   def validate(): Either[String, Field] =
     datatype match {
-      case "string"  => Right(Field(name, DataTypeString))
-      case "decimal" => Right(Field(name, DataTypeDecimal))
+      case "string"  => Right(Field(name, ChromoString))
+      case "decimal" => Right(Field(name, ChromoDecimal))
       case "int"     => Right(Field(name, DataTypeInt))
       case "boolean" => Right(Field(name, DataTypeBoolean))
       case _         => Left(name)

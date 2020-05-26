@@ -1,6 +1,9 @@
-package holydrinker.generator.core
+package holydrinker.chromosoma.validation
 
 import java.io.InputStream
+
+import holydrinker.chromosoma.schema.{ Field, RowFields }
+
 import scala.io.Source
 
 object SchemaValidationService {

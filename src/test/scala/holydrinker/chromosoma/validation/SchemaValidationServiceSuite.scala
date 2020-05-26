@@ -1,5 +1,6 @@
-package holydrinker.generator.core
+package holydrinker.chromosoma.core
 
+import holydrinker.chromosoma.schema.{ Field, RowFields }
 import org.scalatest._
 
 class SchemaSuite extends FlatSpec with Matchers {
@@ -25,7 +26,7 @@ class SchemaSuite extends FlatSpec with Matchers {
 
     val actual = SchemaValidationService.validateFields(stringFields)
 
-    val expected = Right(Seq(Field("name", DataTypeString), Field("surname", DataTypeString)))
+    val expected = Right(Seq(Field("name", ChromoString), Field("surname", ChromoString)))
 
     assert(actual == expected)
   }
