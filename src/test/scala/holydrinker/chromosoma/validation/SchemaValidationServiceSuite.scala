@@ -1,8 +1,9 @@
-package holydrinker.generator.core
+package holydrinker.chromosoma.validation
 
+import holydrinker.chromosoma.schema.{ Field, RowFields, String }
 import org.scalatest._
 
-class SchemaSuite extends FlatSpec with Matchers {
+class SchemaValidationServiceSuite extends FlatSpec with Matchers {
 
   it should "validate a trivial schema" in {
     val trivialSchemaPath  = "/trivialSchema.txt"
@@ -25,7 +26,7 @@ class SchemaSuite extends FlatSpec with Matchers {
 
     val actual = SchemaValidationService.validateFields(stringFields)
 
-    val expected = Right(Seq(Field("name", DataTypeString), Field("surname", DataTypeString)))
+    val expected = Right(Seq(Field("name", String), Field("surname", String)))
 
     assert(actual == expected)
   }
