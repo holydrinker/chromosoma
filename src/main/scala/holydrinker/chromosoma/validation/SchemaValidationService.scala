@@ -20,11 +20,7 @@ object SchemaValidationService {
       .fromInputStream(input)
       .getLines()
       .toSeq
-      .zipWithIndex
-      .map {
-        case (line, idx) =>
-          tryToMakeRowField(line, idx)
-      }
+      .map(tryToMakeRowField)
 
     val accResult = rowFields.foldLeft(ValidationAccumulators()) {
       (acc: ValidationAccumulators, either: Either[FieldError, RowFields]) =>
@@ -45,7 +41,7 @@ object SchemaValidationService {
     }
   }
 
-  private def tryToMakeRowField(line: FieldError, linePos: Int): Either[String, RowFields] = {
+  private def tryToMakeRowField(line: FieldError): Either[String, RowFields] = {
     val splitLine = line.split(" ")
     if (splitLine.size == 2) {
       val fieldName = splitLine(0)

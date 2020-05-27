@@ -1,8 +1,6 @@
 package holydrinker.chromosoma.schema
 
 import java.io.InputStream
-
-import holydrinker.chromosoma.schema
 import holydrinker.chromosoma.validation.SchemaValidationService
 
 case class Field(name: String, dataType: DataType)
@@ -22,22 +20,10 @@ case class Schema(fields: Seq[Field] = Seq.empty[Field])
 
 object Schema {
 
-  def fromInputStream(input: InputStream): Schema = {
-    val rowFields = SchemaValidationService.extractRowFieldsFromStream(input) match {
-      case Right(rowFields) =>
-        rowFields
-      case Left(errorMessage) =>
-        throw new Exception(errorMessage)
-    }
-
-    val fields = SchemaValidationService.validateFields(rowFields) match {
-      case Right(validatedFields) =>
-        validatedFields
-      case Left(errorMessage) =>
-        throw new Exception(errorMessage)
-    }
-
-    schema.Schema(fields)
-  }
+  def fromInputStream(input: InputStream): Either[String, Schema] =
+    for {
+      rowFields <- SchemaValidationService.extractRowFieldsFromStream(input)
+      fields    <- SchemaValidationService.validateFields(rowFields)
+    } yield Schema(fields)
 
 }
