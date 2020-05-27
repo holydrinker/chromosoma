@@ -1,11 +1,11 @@
 package holydrinker.chromosoma.validation
 
 import holydrinker.chromosoma.schema.{ Field, RowFields, String }
-import org.scalatest._
+import munit.FunSuite
 
-class SchemaValidationServiceSuite extends FlatSpec with Matchers {
+class SchemaValidationServiceSuite extends FunSuite {
 
-  it should "validate a trivial schema" in {
+  test("validate a trivial schema") {
     val trivialSchemaPath  = "/trivialSchema.txt"
     val trivialSchemaInput = getClass.getResourceAsStream(trivialSchemaPath)
     val actual             = SchemaValidationService.extractRowFieldsFromStream(trivialSchemaInput)
@@ -13,7 +13,7 @@ class SchemaValidationServiceSuite extends FlatSpec with Matchers {
     assert(actual == expected)
   }
 
-  it should "not validate a trivial invalid schema" in {
+  test("not validate a trivial invalid schema") {
     val trivialSchemaPath  = "/trivialInvalidSchema.txt"
     val trivialSchemaInput = getClass.getResourceAsStream(trivialSchemaPath)
     val actual             = SchemaValidationService.extractRowFieldsFromStream(trivialSchemaInput)
@@ -21,7 +21,7 @@ class SchemaValidationServiceSuite extends FlatSpec with Matchers {
     assert(actual == expected)
   }
 
-  it should "validate fields with string datatype" in {
+  test("validate fields with string datatype") {
     val stringFields = Seq(RowFields("name", "string"), RowFields("surname", "string"))
 
     val actual = SchemaValidationService.validateFields(stringFields)
@@ -31,7 +31,7 @@ class SchemaValidationServiceSuite extends FlatSpec with Matchers {
     assert(actual == expected)
   }
 
-  it should "not validate fields with invalid datatype" in {
+  test("not validate fields with invalid datatype") {
     val stringFields = Seq(RowFields("name", "something-amazing"), RowFields("surname", "best-surname-ever"))
 
     val actual   = SchemaValidationService.validateFields(stringFields)

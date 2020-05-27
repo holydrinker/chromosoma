@@ -1,10 +1,10 @@
 package holydrinker.chromosoma.schema
 
-import org.scalatest.{ FlatSpec, Matchers }
+import munit.FunSuite
 
-class SchemaSuite extends FlatSpec with Matchers {
+class SchemaSuite extends FunSuite {
 
-  it should "read trivial valid schema" in {
+  test("read trivial valid schema") {
     val trivialSchemaPath  = "/trivialSchema.txt"
     val trivialSchemaInput = getClass.getResourceAsStream(trivialSchemaPath)
     val actual             = Schema.fromInputStream(trivialSchemaInput)
@@ -12,7 +12,7 @@ class SchemaSuite extends FlatSpec with Matchers {
     assert(actual == expected)
   }
 
-  it should "read trivial invalid schema" in {
+  test("read trivial invalid schema") {
     val trivialSchemaPath  = "/trivialInvalidSchema.txt"
     val trivialSchemaInput = getClass.getResourceAsStream(trivialSchemaPath)
     val actual             = Schema.fromInputStream(trivialSchemaInput)
