@@ -4,7 +4,7 @@ import java.io.InputStream
 import holydrinker.chromosoma.validation.SchemaValidationService
 import org.apache.avro.Schema
 
-case class Field(name: String, dataType: DataType)
+case class Field(name: String, dataType: ChromoType)
 
 case class RowFields(name: String, datatype: String) {
   def validate(): Either[String, Field] =

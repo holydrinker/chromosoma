@@ -1,0 +1,4 @@
+name string
+budget decimal
+age int
+playSomeInstrument boolean
