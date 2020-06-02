@@ -9,10 +9,10 @@ case class Field(name: String, dataType: DataType)
 case class RowFields(name: String, datatype: String) {
   def validate(): Either[String, Field] =
     datatype match {
-      case "string"  => Right(Field(name, String))
-      case "decimal" => Right(Field(name, Decimal))
-      case "int"     => Right(Field(name, Int))
-      case "boolean" => Right(Field(name, Boolean))
+      case "string"  => Right(Field(name, ChromoString))
+      case "decimal" => Right(Field(name, ChromoDecimal))
+      case "int"     => Right(Field(name, ChromoInt))
+      case "boolean" => Right(Field(name, ChromoBoolean))
       case _         => Left(name)
     }
 }
@@ -31,13 +31,13 @@ object ChromoSchema {
     val fieldTemplate = "{\"name\": \"%s\", \"type\": \"%s\"}"
     val fields = chromoSchema.fields
       .map {
-        case Field(name, String) =>
+        case Field(name, ChromoString) =>
           fieldTemplate.format(name, "string")
-        case Field(name, Decimal) =>
+        case Field(name, ChromoDecimal) =>
           fieldTemplate.format(name, "double")
-        case Field(name, Int) =>
+        case Field(name, ChromoInt) =>
           fieldTemplate.format(name, "int")
-        case Field(name, Boolean) =>
+        case Field(name, ChromoBoolean) =>
           fieldTemplate.format(name, "boolean")
       }
       .mkString(", ")

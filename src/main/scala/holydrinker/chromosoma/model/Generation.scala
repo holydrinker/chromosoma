@@ -1,4 +1,4 @@
-package holydrinker.chromosoma.generation
+package holydrinker.chromosoma.model
 
 import scala.util.Random
 

@@ -1,6 +1,6 @@
 package holydrinker.chromosoma.model
 
-import holydrinker.chromosoma.schema.{ Boolean, ChromoSchema, Decimal, Field, Int, String }
+import holydrinker.chromosoma.schema.{ ChromoBoolean, ChromoDecimal, ChromoInt, ChromoSchema, ChromoString, Field }
 import munit.FunSuite
 
 class DatasetSuite extends FunSuite {
@@ -8,10 +8,10 @@ class DatasetSuite extends FunSuite {
   test("from single field schema") {
     val chromoSchema = ChromoSchema(
       Seq(
-        Field("name", String),
-        Field("age", Int),
-        Field("budget", Decimal),
-        Field("married", Boolean)
+        Field("name", ChromoString),
+        Field("age", ChromoInt),
+        Field("budget", ChromoDecimal),
+        Field("married", ChromoBoolean)
       )
     )
     val n = 1

@@ -1,6 +1,6 @@
 package holydrinker.chromosoma.validation
 
-import holydrinker.chromosoma.schema.{ Field, RowFields, String }
+import holydrinker.chromosoma.schema.{ ChromoString, Field, RowFields }
 import munit.FunSuite
 
 class SchemaValidationServiceSuite extends FunSuite {
@@ -26,7 +26,7 @@ class SchemaValidationServiceSuite extends FunSuite {
 
     val actual = SchemaValidationService.validateFields(stringFields)
 
-    val expected = Right(Seq(Field("name", String), Field("surname", String)))
+    val expected = Right(Seq(Field("name", ChromoString), Field("surname", ChromoString)))
 
     assert(actual == expected)
   }
