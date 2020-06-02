@@ -2,14 +2,18 @@ package holydrinker.chromosoma.model
 
 import holydrinker.chromosoma.generation.Generation
 import holydrinker.chromosoma.schema.{ Boolean, ChromoSchema, Decimal, Field, Int, String }
+import holydrinker.chromosoma.writers.DatasetWriter
 import org.apache.avro.Schema
 import org.apache.avro.generic.{ GenericData, GenericRecord }
 
+case class Dataset(rows: Seq[GenericRecord], schema: Schema)
+
 object Dataset {
 
-  def fromSchema(chromoSchema: ChromoSchema, n: Int): Seq[GenericRecord] = {
+  def fromSchema(chromoSchema: ChromoSchema, n: Int): Dataset = {
     val avroSchema = ChromoSchema.toAvroSchema(chromoSchema)
-    (0 to n).map(_ => makeGenericRecord(chromoSchema, avroSchema))
+    val rows       = (0 to n).map(_ => makeGenericRecord(chromoSchema, avroSchema))
+    Dataset(rows, avroSchema)
   }
 
   private def makeGenericRecord(chromoSchema: ChromoSchema, avroSchema: Schema): GenericRecord = {
@@ -26,5 +30,8 @@ object Dataset {
     }
     record
   }
+
+  def save(dataset: Dataset, pathname: String, format: String): Unit =
+    DatasetWriter(format).save(dataset, pathname)
 
 }

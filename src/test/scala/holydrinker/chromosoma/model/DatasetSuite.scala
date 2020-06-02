@@ -18,10 +18,10 @@ class DatasetSuite extends FunSuite {
 
     val result = Dataset.fromSchema(chromoSchema, n)
 
-    assert(result.head.get("name").isInstanceOf[String])
-    assert(result.head.get("age").isInstanceOf[Int])
-    assert(result.head.get("budget").isInstanceOf[Double])
-    assert(result.head.get("married").isInstanceOf[Boolean])
+    assert(result.rows.head.get("name").isInstanceOf[String])
+    assert(result.rows.head.get("age").isInstanceOf[Int])
+    assert(result.rows.head.get("budget").isInstanceOf[Double])
+    assert(result.rows.head.get("married").isInstanceOf[Boolean])
   }
 
 }
