@@ -12,6 +12,7 @@ object DatasetWriter {
 
   def apply(format: String): DatasetWriter = format match {
     case "avro" => new AvroWriter
+    case "csv"  => new CsvWriter
   }
 
 }

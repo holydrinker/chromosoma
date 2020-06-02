@@ -12,7 +12,7 @@ object Usage {
     ChromoSchema
       .fromInputStream(inputSchema)
       .map(schema => Dataset.fromSchema(schema, 10))
-      .map(DatasetWriter("avro").save(_, "result.avro"))
+      .map(DatasetWriter("csv").save(_, "result.csv"))
   }
 
 }
