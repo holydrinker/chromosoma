@@ -26,9 +26,9 @@ object SchemaValidationService {
       (acc: ValidationAccumulators, either: Either[FieldError, RowFields]) =>
         either match {
           case Right(rowField) =>
-            acc.copy(fieldsAcc = acc.fieldsAcc.appended(rowField))
+            acc.copy(fieldsAcc = acc.fieldsAcc ++ Seq(rowField))
           case Left(errorLine) =>
-            acc.copy(errorAcc = acc.errorAcc.appended(errorLine))
+            acc.copy(errorAcc = acc.errorAcc ++ Seq(errorLine))
         }
     }
 
@@ -57,8 +57,8 @@ object SchemaValidationService {
       .map(_.validate())
       .foldLeft(SemanticAccumulators()) { (acc: SemanticAccumulators, either: Either[String, Field]) =>
         either match {
-          case Right(field) => acc.copy(fields = acc.fields.appended(field))
-          case Left(error)  => acc.copy(errors = acc.errors.appended(error))
+          case Right(field) => acc.copy(fields = acc.fields ++ Seq(field))
+          case Left(error)  => acc.copy(errors = acc.errors ++ Seq(error))
         }
       }
 
