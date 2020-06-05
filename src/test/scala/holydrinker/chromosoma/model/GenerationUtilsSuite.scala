@@ -1,0 +1,3 @@
+package holydrinker.chromosoma.model
+
+class GenerationUtilsSuite extends GenerationUtilsRandomSuite with GenerationUtilsSlotSuite
