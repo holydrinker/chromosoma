@@ -8,8 +8,10 @@ trait Generator[T] {
 
 object IntGenerator extends Generator[Int] {
 
-  override def generate[R <: Rule with Distribution](rules: List[R]): Int =
-    GeneratorUtils.generateZeroOneRandomFlag(Random.nextFloat(), rules)
+  override def generate[R <: Rule with Distribution](rules: List[R]): Int = {
+    val seed = Random.nextFloat()
+    IntUtils.generateInt(seed, rules)
+  }
 
 }
 

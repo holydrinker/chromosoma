@@ -4,19 +4,31 @@ import scala.util.Random
 
 case class DistributionSlot(rule: Rule with Distribution, slotUpperBound: Double)
 
-object GeneratorUtils {
+object IntUtils {
 
-  def generateZeroOneRandomFlag[R <: Rule with Distribution](flag: Double, rules: List[R]): Int = {
-    val slots        = GeneratorUtils.intRangeRulesToSlots(rules)
-    val selectedRule = slots.dropWhile(flag > _.slotUpperBound).head.rule
-
+  def generateInt[R <: Rule with Distribution](seed: Double, rules: List[R]): Int = {
+    val selectedRule = selectRule(seed: Double, rules: List[R])
     selectedRule match {
-      case IntRangeRule(Range(start, end), _) =>
-        start + Random.nextInt(end - start + 1)
-      case _ =>
-        -1
+      case RangeRule(range, _) =>
+        pickRandomNumberWithinRange(range)
+      case IntSetRule(set, _) =>
+        pickRandomValueWithinSet(set)
     }
   }
+
+  private def selectRule[R <: Rule with Distribution](flag: Double, rules: List[R]): Rule = {
+    val slots = IntUtils.intRangeRulesToSlots(rules)
+    slots
+      .dropWhile(flag > _.slotUpperBound)
+      .head
+      .rule
+  }
+
+  private def pickRandomNumberWithinRange(range: Range): Int =
+    range.start + Random.nextInt(range.end - range.start + 1)
+
+  private def pickRandomValueWithinSet[T](set: Set[T]): T =
+    set.toList(Random.nextInt(set.size))
 
   def intRangeRulesToSlots(rules: List[Rule with Distribution]): List[DistributionSlot] = {
 
