@@ -1,14 +1,14 @@
 package holydrinker.chromosoma.validation
 
-import holydrinker.chromosoma.schema.{ ChromoString, Field, RowFields }
+import holydrinker.chromosoma.schema.{ ChromoField, ChromoString, RowFields }
 import munit.FunSuite
 
-class SchemaValidationServiceSuite extends FunSuite {
+class SchemaParserSuite extends FunSuite {
 
   test("validate a trivial schema") {
     val trivialSchemaPath  = "/trivialSchema.txt"
     val trivialSchemaInput = getClass.getResourceAsStream(trivialSchemaPath)
-    val actual             = SchemaValidationService.extractRowFieldsFromStream(trivialSchemaInput)
+    val actual             = SchemaParser.extractRowFieldsFromStream(trivialSchemaInput)
     val expected           = Right(Seq(RowFields("name", "string"), RowFields("surname", "string")))
     assert(actual == expected)
   }
@@ -16,7 +16,7 @@ class SchemaValidationServiceSuite extends FunSuite {
   test("not validate a trivial invalid schema") {
     val trivialSchemaPath  = "/trivialInvalidSchema.txt"
     val trivialSchemaInput = getClass.getResourceAsStream(trivialSchemaPath)
-    val actual             = SchemaValidationService.extractRowFieldsFromStream(trivialSchemaInput)
+    val actual             = SchemaParser.extractRowFieldsFromStream(trivialSchemaInput)
     val expected           = Left("Invalid schema syntax: [a wrong field]")
     assert(actual == expected)
   }
@@ -24,9 +24,9 @@ class SchemaValidationServiceSuite extends FunSuite {
   test("validate fields with string datatype") {
     val stringFields = Seq(RowFields("name", "string"), RowFields("surname", "string"))
 
-    val actual = SchemaValidationService.validateFields(stringFields)
+    val actual = SchemaParser.validateFields(stringFields)
 
-    val expected = Right(Seq(Field("name", ChromoString), Field("surname", ChromoString)))
+    val expected = Right(Seq(ChromoField("name", ChromoString), ChromoField("surname", ChromoString)))
 
     assert(actual == expected)
   }
@@ -34,7 +34,7 @@ class SchemaValidationServiceSuite extends FunSuite {
   test("not validate fields with invalid datatype") {
     val stringFields = Seq(RowFields("name", "something-amazing"), RowFields("surname", "best-surname-ever"))
 
-    val actual   = SchemaValidationService.validateFields(stringFields)
+    val actual   = SchemaParser.validateFields(stringFields)
     val expected = Left("Invalid datatype in fields: [name,surname]")
     assert(actual == expected)
   }

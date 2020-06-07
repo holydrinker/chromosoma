@@ -9,7 +9,7 @@ class ChromoSchemaSuite extends FunSuite {
     val trivialSchemaPath  = "/trivialSchema.txt"
     val trivialSchemaInput = getClass.getResourceAsStream(trivialSchemaPath)
     val actual             = ChromoSchema.fromInputStream(trivialSchemaInput)
-    val expected           = Right(ChromoSchema(Seq(Field("name", ChromoString), Field("surname", ChromoString))))
+    val expected           = Right(ChromoSchema(Seq(ChromoField("name", ChromoString), ChromoField("surname", ChromoString))))
     assert(actual == expected)
   }
 
@@ -24,10 +24,10 @@ class ChromoSchemaSuite extends FunSuite {
   test("convert to avro schema") {
     val chromoSchema = ChromoSchema(
       Seq(
-        Field("name", ChromoString),
-        Field("age", ChromoInt),
-        Field("budget", ChromoDecimal),
-        Field("married", ChromoBoolean)
+        ChromoField("name", ChromoString),
+        ChromoField("age", ChromoInt),
+        ChromoField("budget", ChromoDecimal),
+        ChromoField("married", ChromoBoolean)
       )
     )
 

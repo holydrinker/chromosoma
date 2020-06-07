@@ -1,43 +1,43 @@
 package holydrinker.chromosoma.schema
 
 import java.io.InputStream
-import holydrinker.chromosoma.validation.SchemaValidationService
+import holydrinker.chromosoma.validation.SchemaParser
 import org.apache.avro.Schema
 
-case class Field(name: String, dataType: ChromoType)
+case class ChromoField(name: String, dataType: ChromoType)
 
 case class RowFields(name: String, datatype: String) {
-  def validate(): Either[String, Field] =
+  def validate(): Either[String, ChromoField] =
     datatype match {
-      case "string"  => Right(Field(name, ChromoString))
-      case "decimal" => Right(Field(name, ChromoDecimal))
-      case "int"     => Right(Field(name, ChromoInt))
-      case "boolean" => Right(Field(name, ChromoBoolean))
+      case "string"  => Right(ChromoField(name, ChromoString))
+      case "decimal" => Right(ChromoField(name, ChromoDecimal))
+      case "int"     => Right(ChromoField(name, ChromoInt))
+      case "boolean" => Right(ChromoField(name, ChromoBoolean))
       case _         => Left(name)
     }
 }
 
-case class ChromoSchema(fields: Seq[Field] = Seq.empty[Field])
+case class ChromoSchema(fields: Seq[ChromoField] = Seq.empty[ChromoField])
 
 object ChromoSchema {
 
   def fromInputStream(input: InputStream): Either[String, ChromoSchema] =
     for {
-      rowFields <- SchemaValidationService.extractRowFieldsFromStream(input)
-      fields    <- SchemaValidationService.validateFields(rowFields)
+      rowFields <- SchemaParser.extractRowFieldsFromStream(input)
+      fields    <- SchemaParser.validateFields(rowFields)
     } yield ChromoSchema(fields)
 
   def toAvroSchema(chromoSchema: ChromoSchema): Schema = {
     val fieldTemplate = "{\"name\": \"%s\", \"type\": \"%s\"}"
     val fields = chromoSchema.fields
       .map {
-        case Field(name, ChromoString) =>
+        case ChromoField(name, ChromoString) =>
           fieldTemplate.format(name, "string")
-        case Field(name, ChromoDecimal) =>
+        case ChromoField(name, ChromoDecimal) =>
           fieldTemplate.format(name, "double")
-        case Field(name, ChromoInt) =>
+        case ChromoField(name, ChromoInt) =>
           fieldTemplate.format(name, "int")
-        case Field(name, ChromoBoolean) =>
+        case ChromoField(name, ChromoBoolean) =>
           fieldTemplate.format(name, "boolean")
       }
       .mkString(", ")

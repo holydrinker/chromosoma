@@ -2,18 +2,18 @@ package holydrinker.chromosoma.validation
 
 import java.io.InputStream
 
-import holydrinker.chromosoma.schema.{ Field, RowFields }
+import holydrinker.chromosoma.schema.{ ChromoField, RowFields }
 
 import scala.io.Source
 
-object SchemaValidationService {
+object SchemaParser {
 
   type FieldError  = String
   type SchemaError = String
 
   private case class ValidationAccumulators(errorAcc: Seq[FieldError] = Nil, fieldsAcc: Seq[RowFields] = Nil)
 
-  private case class SemanticAccumulators(errors: Seq[FieldError] = Nil, fields: Seq[Field] = Nil)
+  private case class SemanticAccumulators(errors: Seq[FieldError] = Nil, fields: Seq[ChromoField] = Nil)
 
   def extractRowFieldsFromStream(input: InputStream): Either[FieldError, Seq[RowFields]] = {
     val rowFields = Source
@@ -52,10 +52,10 @@ object SchemaValidationService {
     }
   }
 
-  def validateFields(rowFields: Seq[RowFields]): Either[SchemaError, Seq[Field]] = {
+  def validateFields(rowFields: Seq[RowFields]): Either[SchemaError, Seq[ChromoField]] = {
     val accumulator = rowFields
       .map(_.validate())
-      .foldLeft(SemanticAccumulators()) { (acc: SemanticAccumulators, either: Either[String, Field]) =>
+      .foldLeft(SemanticAccumulators()) { (acc: SemanticAccumulators, either: Either[String, ChromoField]) =>
         either match {
           case Right(field) => acc.copy(fields = acc.fields ++ Seq(field))
           case Left(error)  => acc.copy(errors = acc.errors ++ Seq(error))
