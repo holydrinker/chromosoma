@@ -1,6 +1,6 @@
 package holydrinker.chromosoma.validation
 
-import holydrinker.chromosoma.schema.{ ChromoField, ChromoString, RowFields }
+import holydrinker.chromosoma.model.{ ChromoField, ChromoString, RowFields }
 import munit.FunSuite
 
 class SchemaParserSuite extends FunSuite {

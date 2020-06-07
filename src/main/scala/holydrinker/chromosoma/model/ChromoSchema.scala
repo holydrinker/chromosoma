@@ -1,6 +1,8 @@
-package holydrinker.chromosoma.schema
+package holydrinker.chromosoma.model
 
 import java.io.InputStream
+
+import holydrinker.chromosoma.model
 import holydrinker.chromosoma.validation.SchemaParser
 import org.apache.avro.Schema
 
@@ -17,7 +19,10 @@ case class RowFields(name: String, datatype: String) {
     }
 }
 
-case class ChromoSchema(fields: Seq[ChromoField] = Seq.empty[ChromoField])
+case class ChromoSchema(fields: Seq[ChromoField] = Seq.empty[ChromoField], rules: List[Rule] = List.empty[Rule]) {
+  def addRule(rule: Rule): ChromoSchema =
+    ChromoSchema(fields, rules ::: List(rule))
+}
 
 object ChromoSchema {
 
@@ -25,7 +30,7 @@ object ChromoSchema {
     for {
       rowFields <- SchemaParser.extractRowFieldsFromStream(input)
       fields    <- SchemaParser.validateFields(rowFields)
-    } yield ChromoSchema(fields)
+    } yield model.ChromoSchema(fields)
 
   def toAvroSchema(chromoSchema: ChromoSchema): Schema = {
     val fieldTemplate = "{\"name\": \"%s\", \"type\": \"%s\"}"

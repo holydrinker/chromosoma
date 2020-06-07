@@ -1,32 +1,28 @@
 package holydrinker.chromosoma.model
 
-import holydrinker.chromosoma.schema.{
-  ChromoBoolean,
-  ChromoDecimal,
-  ChromoField,
-  ChromoInt,
-  ChromoSchema,
-  ChromoString
-}
 import munit.FunSuite
 
 class DatasetSuite extends FunSuite {
 
-  test("from single field schema") {
-    val chromoSchema = ChromoSchema(
-      Seq(
-        ChromoField("name", ChromoString),
-        ChromoField("age", ChromoInt),
-        ChromoField("budget", ChromoDecimal),
-        ChromoField("married", ChromoBoolean)
-      )
+  test("simple schema with one range rule") {
+    val fields = Seq(
+      ChromoField("name", ChromoString),
+      ChromoField("age", ChromoInt),
+      ChromoField("budget", ChromoDecimal),
+      ChromoField("married", ChromoBoolean)
     )
-    val n = 1
+    val rules = List(
+      RangeRule(Range(0, 10), DistributionValue(1.0))
+    )
 
-    val result = Dataset.fromSchema(chromoSchema, n)
+    val schema = ChromoSchema(fields, rules)
+    val n      = 1
 
+    val result = Dataset.fromSchema(schema, n)
+
+    val age = result.rows.head.get("age").asInstanceOf[Int]
+    assert(age >= 0 && age <= 10)
     assert(result.rows.head.get("name").isInstanceOf[String])
-    assert(result.rows.head.get("age").isInstanceOf[Int])
     assert(result.rows.head.get("budget").isInstanceOf[Double])
     assert(result.rows.head.get("married").isInstanceOf[Boolean])
   }

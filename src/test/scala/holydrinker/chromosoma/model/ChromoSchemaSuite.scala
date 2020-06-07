@@ -1,4 +1,4 @@
-package holydrinker.chromosoma.schema
+package holydrinker.chromosoma.model
 
 import munit.FunSuite
 import org.apache.avro.Schema

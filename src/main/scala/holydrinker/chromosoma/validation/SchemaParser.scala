@@ -2,7 +2,7 @@ package holydrinker.chromosoma.validation
 
 import java.io.InputStream
 
-import holydrinker.chromosoma.schema.{ ChromoField, RowFields }
+import holydrinker.chromosoma.model.{ ChromoField, RowFields }
 
 import scala.io.Source
 

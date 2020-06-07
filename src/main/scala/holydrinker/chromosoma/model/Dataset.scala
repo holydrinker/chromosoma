@@ -1,13 +1,6 @@
 package holydrinker.chromosoma.model
 
-import holydrinker.chromosoma.schema.{
-  ChromoBoolean,
-  ChromoDecimal,
-  ChromoField,
-  ChromoInt,
-  ChromoSchema,
-  ChromoString
-}
+import holydrinker.chromosoma.generation.GenerationService
 import holydrinker.chromosoma.writers.DatasetWriter
 import org.apache.avro.Schema
 import org.apache.avro.generic.{ GenericData, GenericRecord }
@@ -23,16 +16,18 @@ object Dataset {
   }
 
   private def makeGenericRecord(chromoSchema: ChromoSchema, avroSchema: Schema): GenericRecord = {
-    val record = new GenericData.Record(avroSchema)
+    val record           = new GenericData.Record(avroSchema)
+    val generatorService = new GenerationService(chromoSchema.rules)
+
     chromoSchema.fields.foreach {
       case ChromoField(name, ChromoString) =>
-        record.put(name, Generation.generateString(10))
+        record.put(name, generatorService.generateString(10))
       case ChromoField(name, ChromoInt) =>
-        record.put(name, Generation.generateInteger)
+        record.put(name, generatorService.generateInteger)
       case ChromoField(name, ChromoDecimal) =>
-        record.put(name, Generation.generateNumeric)
+        record.put(name, generatorService.generateNumeric)
       case ChromoField(name, ChromoBoolean) =>
-        record.put(name, Generation.generateBoolean)
+        record.put(name, generatorService.generateBoolean)
     }
     record
   }
