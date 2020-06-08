@@ -1,0 +1,14 @@
+{
+  "fields": [
+    {
+      "name": "name",
+      "dataType": "string",
+      "rules": []
+    },
+    {
+      "name": "age",
+      "dataType": 3,
+      "rules": []
+    }
+  ]
+}

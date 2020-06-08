@@ -1,4 +1,4 @@
-package holydrinker.chromosoma.schema
+package holydrinker.chromosoma.model
 
 sealed trait ChromoType
 
