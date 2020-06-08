@@ -20,14 +20,16 @@ import holydrinker.chromosoma.model.{
 }
 import org.apache.commons.io.IOUtils
 
-object Parser {
+object SchemaParser {
 
   implicit val chromoTypeFormat = new JsonFormat[ChromoType] {
     override def read(json: JsValue): ChromoType = json match {
-      case JsString("string")  => ChromoString
-      case JsString("int")     => ChromoInt
-      case JsString("boolean") => ChromoBoolean
-      case JsString("decimal") => ChromoDecimal
+      case JsString("string")        => ChromoString
+      case JsString("int")           => ChromoInt
+      case JsString("boolean")       => ChromoBoolean
+      case JsString("decimal")       => ChromoDecimal
+      case JsString(unsupportedType) => throw new RuntimeException(s"Unsupported type: $unsupportedType")
+      case _                         => throw new RuntimeException("All dataType fields in schema definition should be string.")
     }
 
     override def write(obj: ChromoType): JsValue = obj match {
@@ -90,5 +92,13 @@ object Parser {
     implicit val configFormat      = jsonFormat1(ChromoSchema.apply)
     source.convertTo[ChromoSchema]
   }
+
+  def hasValidDistribution(schema: ChromoSchema): Boolean = {
+    val overallDistribution = schema.fields.map(sumRuleDistributionInField)
+    overallDistribution == 0.0 || overallDistribution == 1.0
+  }
+
+  private def sumRuleDistributionInField(field: ChromoField): Double =
+    field.rules.map(_.distribution).sum
 
 }

@@ -7,15 +7,18 @@ class DatasetSuite extends FunSuite {
   test("simple schema with one range rule") {
     val fields = Seq(
       ChromoField("name", ChromoString),
-      ChromoField("age", ChromoInt),
+      ChromoField(
+        "age",
+        ChromoInt,
+        List(
+          RangeRule(Range(0, 10), DistributionValue(1.0))
+        )
+      ),
       ChromoField("budget", ChromoDecimal),
       ChromoField("married", ChromoBoolean)
     )
-    val rules = List(
-      RangeRule(Range(0, 10), DistributionValue(1.0))
-    )
 
-    val schema = ChromoSchema(fields, rules)
+    val schema = ChromoSchema(fields)
     val n      = 1
 
     val result = Dataset.fromSchema(schema, n)

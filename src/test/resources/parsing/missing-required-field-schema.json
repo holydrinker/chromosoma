@@ -1,0 +1,13 @@
+{
+  "fields": [
+    {
+      "name": "name",
+      "rules": []
+    },
+    {
+      "name": "age",
+      "dataType": 3,
+      "rules": []
+    }
+  ]
+}

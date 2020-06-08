@@ -4,12 +4,12 @@ import holydrinker.chromosoma.model.Rule
 
 import scala.util.Random
 
-class GenerationService(rules: List[Rule]) {
+object GenerationService {
 
   def generateString(size: Int): String =
     Random.alphanumeric.take(10).mkString
 
-  def generateInteger: Int =
+  def generateInteger(rules: List[Rule]): Int =
     IntGenerationService.generate(rules)
 
   def generateNumeric: Double =

@@ -13,12 +13,3 @@ case class IntSetRule(values: Set[Int], distributionValue: DistributionValue) ex
 }
 
 case class DistributionValue(value: Double)
-
-/*
-
-{
-        "type" = "range-rule",
-        "bounds" = [0, 10]
-        "distribution-value": 1.0
-      }
- */
