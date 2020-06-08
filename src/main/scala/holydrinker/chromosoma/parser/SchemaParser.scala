@@ -1,70 +1,94 @@
 package holydrinker.chromosoma.parser
 
-import java.io.InputStream
+import java.nio.charset.StandardCharsets
+import java.io.{ InputStream, StringWriter }
 
-import holydrinker.chromosoma.model.{ ChromoField, RowFields }
+import spray.json._
+import DefaultJsonProtocol._
+import holydrinker.chromosoma.model.{
+  ChromoBoolean,
+  ChromoDecimal,
+  ChromoField,
+  ChromoInt,
+  ChromoSchema,
+  ChromoString,
+  ChromoType,
+  DistributionValue,
+  IntSetRule,
+  RangeRule,
+  Rule
+}
+import org.apache.commons.io.IOUtils
 
-import scala.io.Source
+object Parser {
 
-object SchemaParser {
-
-  type FieldError  = String
-  type SchemaError = String
-
-  private case class ValidationAccumulators(errorAcc: Seq[FieldError] = Nil, fieldsAcc: Seq[RowFields] = Nil)
-
-  private case class SemanticAccumulators(errors: Seq[FieldError] = Nil, fields: Seq[ChromoField] = Nil)
-
-  def extractRowFieldsFromStream(input: InputStream): Either[FieldError, Seq[RowFields]] = {
-    val rowFields = Source
-      .fromInputStream(input)
-      .getLines()
-      .toSeq
-      .map(tryToMakeRowField)
-
-    val accResult = rowFields.foldLeft(ValidationAccumulators()) {
-      (acc: ValidationAccumulators, either: Either[FieldError, RowFields]) =>
-        either match {
-          case Right(rowField) =>
-            acc.copy(fieldsAcc = acc.fieldsAcc ++ Seq(rowField))
-          case Left(errorLine) =>
-            acc.copy(errorAcc = acc.errorAcc ++ Seq(errorLine))
-        }
+  implicit val chromoTypeFormat = new JsonFormat[ChromoType] {
+    override def read(json: JsValue): ChromoType = json match {
+      case JsString("string")  => ChromoString
+      case JsString("int")     => ChromoInt
+      case JsString("boolean") => ChromoBoolean
+      case JsString("decimal") => ChromoDecimal
     }
 
-    accResult match {
-      case ValidationAccumulators(Nil, fields) =>
-        Right(fields)
-      case ValidationAccumulators(errors, Nil) =>
-        val errorMsg = s"Invalid schema syntax: [${errors.mkString("\n")}]"
-        Left(errorMsg)
+    override def write(obj: ChromoType): JsValue = obj match {
+      case ChromoString  => JsString("string")
+      case ChromoInt     => JsString("int")
+      case ChromoBoolean => JsString("boolean")
+      case ChromoDecimal => JsString("decimal")
     }
   }
 
-  private def tryToMakeRowField(line: FieldError): Either[String, RowFields] = {
-    val splitLine = line.split(" ")
-    if (splitLine.size == 2) {
-      val fieldName = splitLine(0)
-      val fieldType = splitLine(1)
-      Right(RowFields(fieldName, fieldType))
-    } else {
-      Left(line)
-    }
-  }
-
-  def validateFields(rowFields: Seq[RowFields]): Either[SchemaError, Seq[ChromoField]] = {
-    val accumulator = rowFields
-      .map(_.validate())
-      .foldLeft(SemanticAccumulators()) { (acc: SemanticAccumulators, either: Either[String, ChromoField]) =>
-        either match {
-          case Right(field) => acc.copy(fields = acc.fields ++ Seq(field))
-          case Left(error)  => acc.copy(errors = acc.errors ++ Seq(error))
+  implicit val rule = new JsonFormat[Rule] {
+    override def read(json: JsValue): Rule = json match {
+      case JsObject(fields) =>
+        fields.getOrElse("type", "undefined") match {
+          case JsString("set")   => makeSetRule(fields)
+          case JsString("range") => makeRangeRule(fields)
         }
+    }
+
+    private def makeSetRule(fields: Map[String, JsValue]): IntSetRule = {
+      val setValues = fields.get("values").get match {
+        case JsArray(values) =>
+          values.map {
+            case JsNumber(number) => number.toInt
+          }
       }
 
-    accumulator match {
-      case SemanticAccumulators(Nil, fields) => Right(fields)
-      case SemanticAccumulators(errors, _)   => Left(s"Invalid datatype in fields: [name,surname]")
+      val distributionValue = fields.get("distribution").get match {
+        case JsNumber(value) => value.toDouble
+      }
+
+      IntSetRule(setValues.toSet, DistributionValue(distributionValue))
     }
+
+    private def makeRangeRule(fields: Map[String, JsValue]): RangeRule = {
+      val min = fields.get("min").get match {
+        case JsNumber(minValue) => minValue.toInt
+      }
+
+      val max = fields.get("max").get match {
+        case JsNumber(maxValue) => maxValue.toInt
+      }
+
+      val distribution = fields.get("distribution").get match {
+        case JsNumber(distributionValue) => distributionValue.toDouble
+      }
+
+      RangeRule(Range(min, max), DistributionValue(distribution))
+    }
+
+    override def write(obj: Rule): JsValue = JsNumber(10)
   }
+
+  def fromInputStream(inputStream: InputStream): ChromoSchema = {
+    val writer = new StringWriter()
+    IOUtils.copy(inputStream, writer, StandardCharsets.UTF_8)
+    val source = writer.toString.parseJson
+
+    implicit val chromoFieldFormat = jsonFormat3(ChromoField)
+    implicit val configFormat      = jsonFormat1(ChromoSchema.apply)
+    source.convertTo[ChromoSchema]
+  }
+
 }
