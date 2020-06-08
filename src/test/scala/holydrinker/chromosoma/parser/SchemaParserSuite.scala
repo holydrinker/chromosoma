@@ -1,4 +1,4 @@
-package holydrinker.chromosoma.validation
+package holydrinker.chromosoma.parser
 
 import holydrinker.chromosoma.model.{ ChromoField, ChromoString, RowFields }
 import munit.FunSuite

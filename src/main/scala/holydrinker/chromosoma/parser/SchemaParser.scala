@@ -1,4 +1,4 @@
-package holydrinker.chromosoma.validation
+package holydrinker.chromosoma.parser
 
 import java.io.InputStream
 

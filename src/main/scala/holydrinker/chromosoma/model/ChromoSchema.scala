@@ -3,7 +3,7 @@ package holydrinker.chromosoma.model
 import java.io.InputStream
 
 import holydrinker.chromosoma.model
-import holydrinker.chromosoma.validation.SchemaParser
+import holydrinker.chromosoma.parser.SchemaParser
 import org.apache.avro.Schema
 
 case class ChromoField(name: String, dataType: ChromoType)

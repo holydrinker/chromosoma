@@ -1,0 +1,27 @@
+{
+  "fields": [
+    {
+      "name": "name",
+      "dataType": "string",
+      "rules": []
+    },
+    {
+      "name": "age",
+      "dataType": "int",
+      "rules": [
+        {
+          "type":  "set",
+          "values": [100],
+          "distribution": 0.1
+        },
+        {
+          "type": "range",
+          "min": 10,
+          "max": 99,
+          "distribution": 0.9
+        }
+      ]
+
+    }
+  ]
+}
