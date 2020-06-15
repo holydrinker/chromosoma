@@ -1,38 +1,31 @@
 package holydrinker.chromosoma.generation
 
 import holydrinker.chromosoma.model.{ IntSetRule, RangeRule, Rule }
-
 import scala.util.Random
 
-case class DistributionSlot(rule: Rule, slotUpperBound: Double)
+object CommonUtils {
 
-object IntGenerationUtils {
+  case class DistributionSlot(rule: Rule, slotUpperBound: Double)
 
-  def generateInt[R <: Rule](seed: Double, rules: List[R]): Int = {
-    val selectedRule = selectRule(seed: Double, rules: List[R])
+  def generateDecimal[R <: Rule](seed: Double, rules: List[R]): Double = {
+    val selectedRule = selectRule(seed, rules)
     selectedRule match {
       case RangeRule(range, _) =>
-        pickRandomNumberWithinRange(range)
+        pickRandomDoubleWithinRange(range)
       case IntSetRule(set, _) =>
         pickRandomValueWithinSet(set)
     }
   }
 
-  private def selectRule[R <: Rule](flag: Double, rules: List[R]): Rule = {
-    val slots = IntGenerationUtils.intRangeRulesToSlots(rules)
+  def selectRule[R <: Rule](flag: Double, rules: List[R]): Rule = {
+    val slots = rangeRulesToSlots(rules)
     slots
       .dropWhile(flag > _.slotUpperBound)
       .head
       .rule
   }
 
-  private def pickRandomNumberWithinRange(range: Range): Int =
-    range.start + Random.nextInt(range.end - range.start + 1)
-
-  private def pickRandomValueWithinSet[T](set: Set[T]): T =
-    set.toList(Random.nextInt(set.size))
-
-  def intRangeRulesToSlots(rules: List[Rule]): List[DistributionSlot] = {
+  def rangeRulesToSlots(rules: List[Rule]): List[DistributionSlot] = {
 
     def loop(
         rules: List[Rule],
@@ -54,5 +47,11 @@ object IntGenerationUtils {
 
   private def preciseDoubleSum(x: Double, y: Double): Double =
     (BigDecimal(x) + BigDecimal(y)).toDouble
+
+  def pickRandomValueWithinSet[T](set: Set[T]): T =
+    set.toList(Random.nextInt(set.size))
+
+  private def pickRandomDoubleWithinRange(range: Range): Double =
+    range.start + Random.nextDouble() * (range.end - range.start)
 
 }

@@ -8,17 +8,18 @@ trait SingleTypeGenerationService[T] {
   def generate[R <: Rule](rules: List[R]): T
 }
 
-object IntGenerationService extends SingleTypeGenerationService[Int] {
+object IntegerService extends SingleTypeGenerationService[Int] {
 
   override def generate[R <: Rule](rules: List[R]): Int = {
     val seed = Random.nextFloat()
-    IntGenerationUtils.generateInt(seed, rules)
+    CommonUtils.generateDecimal(seed, rules).toInt
   }
 
 }
 
-object Runner {
-
-  def main(args: Array[String]): Unit = {}
-
+object DecimalService extends SingleTypeGenerationService[Double] {
+  override def generate[R <: Rule](rules: List[R]): Double = {
+    val seed = Random.nextFloat()
+    CommonUtils.generateDecimal(seed, rules)
+  }
 }
