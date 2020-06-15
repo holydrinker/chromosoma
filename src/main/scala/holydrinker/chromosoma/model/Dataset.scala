@@ -21,10 +21,13 @@ object Dataset {
     chromoSchema.fields.foreach {
       case ChromoField(name, ChromoString, _) =>
         record.put(name, GenerationService.generateString(10))
+
       case ChromoField(name, ChromoInt, rules) =>
         record.put(name, GenerationService.generateInteger(rules))
-      case ChromoField(name, ChromoDecimal, _) =>
-        record.put(name, GenerationService.generateNumeric)
+
+      case ChromoField(name, ChromoDecimal, rules) =>
+        record.put(name, GenerationService.generateNumeric(rules))
+
       case ChromoField(name, ChromoBoolean, _) =>
         record.put(name, GenerationService.generateBoolean)
     }

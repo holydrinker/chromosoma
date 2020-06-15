@@ -1,16 +1,17 @@
 package holydrinker.chromosoma.generation
 
+import holydrinker.chromosoma.generation.CommonUtils.DistributionSlot
 import holydrinker.chromosoma.model.{ DistributionValue, IntSetRule, RangeRule }
 import munit.FunSuite
 
-class IntGenerationUtilsSuite extends FunSuite {
+class CommonUtilsSuite extends FunSuite {
 
   test("low corner case") {
     val rules = List(
       RangeRule(Range(0, 50), DistributionValue(.8)),
       RangeRule(Range(51, 100), DistributionValue(.2))
     )
-    val actual = IntGenerationUtils.generateInt(0.0, rules)
+    val actual = CommonUtils.generateDecimal(0.0, rules)
     assert(0 <= actual && actual <= 50)
   }
 
@@ -19,7 +20,7 @@ class IntGenerationUtilsSuite extends FunSuite {
       RangeRule(Range(0, 50), DistributionValue(.8)),
       RangeRule(Range(51, 100), DistributionValue(.2))
     )
-    val actual = IntGenerationUtils.generateInt(.79, rules)
+    val actual = CommonUtils.generateDecimal(.79, rules)
     assert(0 <= actual && actual <= 50)
   }
 
@@ -28,7 +29,7 @@ class IntGenerationUtilsSuite extends FunSuite {
       RangeRule(Range(0, 50), DistributionValue(.8)),
       RangeRule(Range(51, 100), DistributionValue(.2))
     )
-    val actual = IntGenerationUtils.generateInt(.8, rules)
+    val actual = CommonUtils.generateDecimal(.8, rules)
     assert(0 <= actual && actual <= 50)
   }
 
@@ -37,7 +38,7 @@ class IntGenerationUtilsSuite extends FunSuite {
       RangeRule(Range(0, 50), DistributionValue(.8)),
       RangeRule(Range(51, 100), DistributionValue(.2))
     )
-    val actual = IntGenerationUtils.generateInt(.21, rules)
+    val actual = CommonUtils.generateDecimal(.21, rules)
     assert(0 <= actual && actual <= 50)
   }
 
@@ -46,7 +47,7 @@ class IntGenerationUtilsSuite extends FunSuite {
       RangeRule(Range(0, 50), DistributionValue(.8)),
       RangeRule(Range(51, 100), DistributionValue(.2))
     )
-    val actual = IntGenerationUtils.generateInt(1, rules)
+    val actual = CommonUtils.generateDecimal(1, rules)
     assert(51 <= actual && actual <= 100)
   }
 
@@ -55,8 +56,8 @@ class IntGenerationUtilsSuite extends FunSuite {
       RangeRule(Range(0, 10), DistributionValue(.8)),
       IntSetRule(Set(100, 1000), DistributionValue(.2))
     )
-    val itemFromRange = IntGenerationUtils.generateInt(.3, rules)
-    val itemFromSet   = IntGenerationUtils.generateInt(0.9, rules)
+    val itemFromRange = CommonUtils.generateDecimal(.3, rules)
+    val itemFromSet   = CommonUtils.generateDecimal(0.9, rules)
 
     assert(itemFromRange >= 0 && itemFromRange <= 10)
     assert(itemFromSet == 100 || itemFromSet == 1000)
@@ -68,7 +69,7 @@ class IntGenerationUtilsSuite extends FunSuite {
       RangeRule(Range(51, 100), DistributionValue(.2))
     )
 
-    val actual = IntGenerationUtils.intRangeRulesToSlots(rules)
+    val actual = CommonUtils.rangeRulesToSlots(rules)
 
     val expected = List(
       DistributionSlot(RangeRule(Range(0, 50), DistributionValue(.8)), .8),
@@ -92,7 +93,7 @@ class IntGenerationUtilsSuite extends FunSuite {
       RangeRule(Range(91, 100), DistributionValue(.1))
     )
 
-    val actual = IntGenerationUtils.intRangeRulesToSlots(rules)
+    val actual = CommonUtils.rangeRulesToSlots(rules)
 
     val expected = List(
       DistributionSlot(RangeRule(Range(1, 10), DistributionValue(.1)), 0.1),

@@ -10,10 +10,10 @@ object GenerationService {
     Random.alphanumeric.take(10).mkString
 
   def generateInteger(rules: List[Rule]): Int =
-    IntGenerationService.generate(rules)
+    IntegerService.generate(rules)
 
-  def generateNumeric: Double =
-    Random.nextDouble()
+  def generateNumeric(rules: List[Rule]): Double =
+    DecimalService.generate(rules)
 
   def generateBoolean: Boolean =
     Random.nextBoolean()
