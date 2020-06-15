@@ -21,6 +21,23 @@
           "distribution": 0.9
         }
       ]
+    },
+    {
+      "name": "budget",
+      "dataType": "decimal",
+      "rules": [
+        {
+          "type":  "set",
+          "values": [100],
+          "distribution": 0.5
+        },
+        {
+          "type": "range",
+          "min": 1,
+          "max": 10,
+          "distribution": 0.5
+        }
+      ]
     }
   ]
 }
