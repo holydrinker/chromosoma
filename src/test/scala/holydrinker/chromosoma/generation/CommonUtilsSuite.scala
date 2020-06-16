@@ -1,7 +1,7 @@
 package holydrinker.chromosoma.generation
 
 import holydrinker.chromosoma.generation.CommonUtils.DistributionSlot
-import holydrinker.chromosoma.model.{ DistributionValue, IntSetRule, RangeRule }
+import holydrinker.chromosoma.model.{ BooleanRule, DistributionValue, IntSetRule, RangeRule }
 import munit.FunSuite
 
 class CommonUtilsSuite extends FunSuite {
@@ -109,6 +109,17 @@ class CommonUtilsSuite extends FunSuite {
     )
 
     assert(actual == expected)
+  }
+
+  test("generate boolean") {
+    val rule = BooleanRule(falseDistribution = DistributionValue(0.4), trueDistribution = DistributionValue(0.6))
+
+    val trueValue = CommonUtils.generateBoolean(0.2, rule)
+    assert(trueValue)
+
+    val falseValue = CommonUtils.generateBoolean(0.7, rule)
+    assert(!falseValue)
+
   }
 
 }

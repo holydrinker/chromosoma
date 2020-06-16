@@ -1,43 +1,60 @@
 {
-  "fields": [
-    {
-      "name": "name",
-      "dataType": "string",
-      "rules": []
-    },
-    {
-      "name": "age",
-      "dataType": "int",
-      "rules": [
-        {
-          "type":  "set",
-          "values": [100],
-          "distribution": 0.1
-        },
-        {
-          "type": "range",
-          "min": 10,
-          "max": 99,
-          "distribution": 0.9
-        }
-      ]
-    },
-    {
-      "name": "budget",
-      "dataType": "decimal",
-      "rules": [
-        {
-          "type":  "set",
-          "values": [100],
-          "distribution": 0.5
-        },
-        {
-          "type": "range",
-          "min": 1,
-          "max": 10,
-          "distribution": 0.5
-        }
-      ]
-    }
-  ]
+   "fields":[
+      {
+         "name":"name",
+         "dataType":"string",
+         "rules":[
+
+         ]
+      },
+      {
+         "name":"age",
+         "dataType":"int",
+         "rules":[
+            {
+               "type":"set",
+               "values":[
+                  100
+               ],
+               "distribution":0.1
+            },
+            {
+               "type":"range",
+               "min":10,
+               "max":99,
+               "distribution":0.9
+            }
+         ]
+      },
+      {
+         "name":"budget",
+         "dataType":"decimal",
+         "rules":[
+            {
+               "type":"set",
+               "values":[
+                  100
+               ],
+               "distribution":0.5
+            },
+            {
+               "type":"range",
+               "min":1,
+               "max":10,
+               "distribution":0.5
+            }
+         ]
+      },
+      {
+         "name":"married",
+         "dataType":"boolean",
+         "rules":[
+            {
+               "type":"boolean",
+               "false":0.0,
+               "true":1.0
+            }
+         ]
+      }
+   ]
 }

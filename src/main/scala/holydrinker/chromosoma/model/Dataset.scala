@@ -28,8 +28,8 @@ object Dataset {
       case ChromoField(name, ChromoDecimal, rules) =>
         record.put(name, GenerationService.generateNumeric(rules))
 
-      case ChromoField(name, ChromoBoolean, _) =>
-        record.put(name, GenerationService.generateBoolean)
+      case ChromoField(name, ChromoBoolean, rules) =>
+        record.put(name, GenerationService.generateBoolean(rules))
     }
     record
   }

@@ -12,4 +12,8 @@ case class IntSetRule(values: Set[Int], distributionValue: DistributionValue) ex
   override def distribution: Double = distributionValue.value
 }
 
+case class BooleanRule(trueDistribution: DistributionValue, falseDistribution: DistributionValue) extends Rule {
+  override def distribution: Double = 1.0
+}
+
 case class DistributionValue(value: Double)

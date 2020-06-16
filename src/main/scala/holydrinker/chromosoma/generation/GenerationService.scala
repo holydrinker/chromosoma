@@ -15,7 +15,7 @@ object GenerationService {
   def generateNumeric(rules: List[Rule]): Double =
     DecimalService.generate(rules)
 
-  def generateBoolean: Boolean =
-    Random.nextBoolean()
+  def generateBoolean(rules: List[Rule]): Boolean =
+    BooleanService.generate(rules)
 
 }
