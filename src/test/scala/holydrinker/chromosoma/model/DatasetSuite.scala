@@ -21,7 +21,13 @@ class DatasetSuite extends FunSuite {
           RangeRule(Range(0, 10), DistributionValue(1.0))
         )
       ),
-      ChromoField("married", ChromoBoolean)
+      ChromoField(
+        "married",
+        ChromoBoolean,
+        List(
+          BooleanRule(trueDistribution = DistributionValue(1), falseDistribution = DistributionValue(0))
+        )
+      )
     )
 
     val schema = ChromoSchema(fields)
@@ -29,13 +35,13 @@ class DatasetSuite extends FunSuite {
 
     val result = Dataset.fromSchema(schema, n)
 
-    val age    = result.rows.head.get("age").asInstanceOf[Int]
-    val budget = result.rows.head.get("bedget").asInstanceOf[Double]
+    val age     = result.rows.head.get("age").asInstanceOf[Int]
+    val budget  = result.rows.head.get("budget").asInstanceOf[Double]
+    val married = result.rows.head.get("married").asInstanceOf[Boolean]
+
     assert(age >= 0 && age <= 10)
     assert(budget >= 0 && budget <= 10)
-    assert(result.rows.head.get("name").isInstanceOf[String])
-    assert(result.rows.head.get("budget").isInstanceOf[Double])
-    assert(result.rows.head.get("married").isInstanceOf[Boolean])
+    assert(married)
   }
 
 }

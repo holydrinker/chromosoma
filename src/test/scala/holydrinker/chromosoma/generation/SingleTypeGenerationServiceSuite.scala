@@ -1,6 +1,6 @@
 package holydrinker.chromosoma.generation
 
-import holydrinker.chromosoma.model.{ DistributionValue, RangeRule }
+import holydrinker.chromosoma.model.{ BooleanRule, DistributionValue, RangeRule }
 import munit.FunSuite
 
 class SingleTypeGenerationServiceSuite extends FunSuite {
@@ -23,6 +23,22 @@ class SingleTypeGenerationServiceSuite extends FunSuite {
 
     val generatedInt = DecimalService.generate(rules)
     assert(generatedInt >= 10 && generatedInt <= 100)
+  }
+
+  test("basic boolean generation") {
+    val trueValue = BooleanService.generate(
+      List(
+        BooleanRule(falseDistribution = DistributionValue(0), trueDistribution = DistributionValue(1))
+      )
+    )
+    assert(trueValue)
+
+    val falseValue = BooleanService.generate(
+      List(
+        BooleanRule(falseDistribution = DistributionValue(1), trueDistribution = DistributionValue(0))
+      )
+    )
+    assert(!falseValue)
   }
 
 }

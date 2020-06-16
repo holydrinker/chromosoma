@@ -6,6 +6,7 @@ import java.io.{ InputStream, StringWriter }
 import spray.json._
 import DefaultJsonProtocol._
 import holydrinker.chromosoma.model.{
+  BooleanRule,
   ChromoBoolean,
   ChromoDecimal,
   ChromoField,
@@ -44,8 +45,9 @@ object SchemaParser {
     override def read(json: JsValue): Rule = json match {
       case JsObject(fields) =>
         fields.getOrElse("type", "undefined") match {
-          case JsString("set")   => makeSetRule(fields)
-          case JsString("range") => makeRangeRule(fields)
+          case JsString("set")     => makeSetRule(fields)
+          case JsString("range")   => makeRangeRule(fields)
+          case JsString("boolean") => makeBooleanRule(fields)
         }
     }
 
@@ -80,6 +82,19 @@ object SchemaParser {
       RangeRule(Range(min, max), DistributionValue(distribution))
     }
 
+    private def makeBooleanRule(fields: Map[String, JsValue]): BooleanRule = {
+      val trueDistribution = fields.get("true").get match {
+        case JsNumber(trueDistribution) => trueDistribution
+      }
+      val falseDistribution = fields.get("false").get match {
+        case JsNumber(falseDistribution) => falseDistribution
+      }
+      BooleanRule(
+        trueDistribution = DistributionValue(trueDistribution.toDouble),
+        falseDistribution = DistributionValue(falseDistribution.toDouble)
+      )
+    }
+
     override def write(obj: Rule): JsValue = JsNumber(10)
   }
 
@@ -92,13 +107,5 @@ object SchemaParser {
     implicit val configFormat      = jsonFormat1(ChromoSchema.apply)
     source.convertTo[ChromoSchema]
   }
-
-  def hasValidDistribution(schema: ChromoSchema): Boolean = {
-    val overallDistribution = schema.fields.map(sumRuleDistributionInField)
-    overallDistribution == 0.0 || overallDistribution == 1.0
-  }
-
-  private def sumRuleDistributionInField(field: ChromoField): Double =
-    field.rules.map(_.distribution).sum
 
 }

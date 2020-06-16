@@ -1,6 +1,6 @@
 package holydrinker.chromosoma.generation
 
-import holydrinker.chromosoma.model.Rule
+import holydrinker.chromosoma.model.{ BooleanRule, DistributionValue, Rule }
 
 import scala.util.Random
 
@@ -22,4 +22,21 @@ object DecimalService extends SingleTypeGenerationService[Double] {
     val seed = Random.nextFloat()
     CommonUtils.generateDecimal(seed, rules)
   }
+}
+
+object BooleanService extends SingleTypeGenerationService[Boolean] {
+  override def generate[R <: Rule](rules: List[R]): Boolean = {
+    assert(rules.size == 1)
+    val rule = getStandardBooleanRuleIfNoRulesProvided(rules)
+    val seed = Random.nextFloat()
+    CommonUtils.generateBoolean(seed, rule)
+  }
+
+  private def getStandardBooleanRuleIfNoRulesProvided[R <: Rule](rules: List[R]): BooleanRule =
+    rules.headOption match {
+      case Some(rule: BooleanRule) =>
+        rule
+      case None =>
+        BooleanRule(trueDistribution = DistributionValue(0.5), falseDistribution = DistributionValue(0.5))
+    }
 }

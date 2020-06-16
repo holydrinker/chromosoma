@@ -6,17 +6,6 @@ import holydrinker.chromosoma.model
 import holydrinker.chromosoma.parser.SchemaParser
 import org.apache.avro.Schema
 
-case class RowFields(name: String, datatype: String) {
-  def validate(): Either[String, ChromoField] =
-    datatype match {
-      case "string"  => Right(ChromoField(name, ChromoString))
-      case "decimal" => Right(ChromoField(name, ChromoDecimal))
-      case "int"     => Right(ChromoField(name, ChromoInt))
-      case "boolean" => Right(ChromoField(name, ChromoBoolean))
-      case _         => Left(name)
-    }
-}
-
 case class ChromoField(name: String, dataType: ChromoType, rules: List[Rule] = List.empty[Rule])
 
 case class ChromoSchema(fields: Seq[ChromoField])
