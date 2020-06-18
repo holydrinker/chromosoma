@@ -1,17 +1,17 @@
 package holydrinker.chromosoma.generation
 
-import holydrinker.chromosoma.generation.CommonUtils.DistributionSlot
-import holydrinker.chromosoma.model.{ BooleanRule, DistributionValue, IntSetRule, RangeRule }
+import holydrinker.chromosoma.generation.Utils.DistributionSlot
+import holydrinker.chromosoma.model.{ BooleanRule, DistributionValue, IntSetRule, RangeRule, StringSetRule }
 import munit.FunSuite
 
-class CommonUtilsSuite extends FunSuite {
+class UtilsSuite extends FunSuite {
 
   test("low corner case") {
     val rules = List(
       RangeRule(Range(0, 50), DistributionValue(.8)),
       RangeRule(Range(51, 100), DistributionValue(.2))
     )
-    val actual = CommonUtils.generateDecimal(0.0, rules)
+    val actual = Utils.generateDecimal(0.0, rules)
     assert(0 <= actual && actual <= 50)
   }
 
@@ -20,7 +20,7 @@ class CommonUtilsSuite extends FunSuite {
       RangeRule(Range(0, 50), DistributionValue(.8)),
       RangeRule(Range(51, 100), DistributionValue(.2))
     )
-    val actual = CommonUtils.generateDecimal(.79, rules)
+    val actual = Utils.generateDecimal(.79, rules)
     assert(0 <= actual && actual <= 50)
   }
 
@@ -29,7 +29,7 @@ class CommonUtilsSuite extends FunSuite {
       RangeRule(Range(0, 50), DistributionValue(.8)),
       RangeRule(Range(51, 100), DistributionValue(.2))
     )
-    val actual = CommonUtils.generateDecimal(.8, rules)
+    val actual = Utils.generateDecimal(.8, rules)
     assert(0 <= actual && actual <= 50)
   }
 
@@ -38,7 +38,7 @@ class CommonUtilsSuite extends FunSuite {
       RangeRule(Range(0, 50), DistributionValue(.8)),
       RangeRule(Range(51, 100), DistributionValue(.2))
     )
-    val actual = CommonUtils.generateDecimal(.21, rules)
+    val actual = Utils.generateDecimal(.21, rules)
     assert(0 <= actual && actual <= 50)
   }
 
@@ -47,7 +47,7 @@ class CommonUtilsSuite extends FunSuite {
       RangeRule(Range(0, 50), DistributionValue(.8)),
       RangeRule(Range(51, 100), DistributionValue(.2))
     )
-    val actual = CommonUtils.generateDecimal(1, rules)
+    val actual = Utils.generateDecimal(1, rules)
     assert(51 <= actual && actual <= 100)
   }
 
@@ -56,8 +56,8 @@ class CommonUtilsSuite extends FunSuite {
       RangeRule(Range(0, 10), DistributionValue(.8)),
       IntSetRule(Set(100, 1000), DistributionValue(.2))
     )
-    val itemFromRange = CommonUtils.generateDecimal(.3, rules)
-    val itemFromSet   = CommonUtils.generateDecimal(0.9, rules)
+    val itemFromRange = Utils.generateDecimal(.3, rules)
+    val itemFromSet   = Utils.generateDecimal(0.9, rules)
 
     assert(itemFromRange >= 0 && itemFromRange <= 10)
     assert(itemFromSet == 100 || itemFromSet == 1000)
@@ -69,7 +69,7 @@ class CommonUtilsSuite extends FunSuite {
       RangeRule(Range(51, 100), DistributionValue(.2))
     )
 
-    val actual = CommonUtils.rangeRulesToSlots(rules)
+    val actual = Utils.rangeRulesToSlots(rules)
 
     val expected = List(
       DistributionSlot(RangeRule(Range(0, 50), DistributionValue(.8)), .8),
@@ -93,7 +93,7 @@ class CommonUtilsSuite extends FunSuite {
       RangeRule(Range(91, 100), DistributionValue(.1))
     )
 
-    val actual = CommonUtils.rangeRulesToSlots(rules)
+    val actual = Utils.rangeRulesToSlots(rules)
 
     val expected = List(
       DistributionSlot(RangeRule(Range(1, 10), DistributionValue(.1)), 0.1),
@@ -114,12 +114,27 @@ class CommonUtilsSuite extends FunSuite {
   test("generate boolean") {
     val rule = BooleanRule(falseDistribution = DistributionValue(0.4), trueDistribution = DistributionValue(0.6))
 
-    val trueValue = CommonUtils.generateBoolean(0.2, rule)
+    val trueValue = Utils.generateBoolean(0.2, rule)
     assert(trueValue)
 
-    val falseValue = CommonUtils.generateBoolean(0.7, rule)
+    val falseValue = Utils.generateBoolean(0.7, rule)
     assert(!falseValue)
 
+  }
+
+  test("Simple string generation") {
+    val set1 = Set("bass", "guitar", "drums")
+    val set2 = Set("voice", "piano")
+
+    val rules = List(
+      StringSetRule(set1, DistributionValue(0.5)),
+      StringSetRule(set2, DistributionValue(0.5))
+    )
+    val result1 = Utils.generateString(0.1, rules)
+    assert(set1.contains(result1))
+
+    val result2 = Utils.generateString(0.8, rules)
+    assert(set2.contains(result2))
   }
 
 }

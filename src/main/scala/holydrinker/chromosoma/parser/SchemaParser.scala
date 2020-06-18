@@ -17,7 +17,8 @@ import holydrinker.chromosoma.model.{
   DistributionValue,
   IntSetRule,
   RangeRule,
-  Rule
+  Rule,
+  StringSetRule
 }
 import org.apache.commons.io.IOUtils
 
@@ -42,6 +43,7 @@ object SchemaParser {
   }
 
   implicit val rule = new JsonFormat[Rule] {
+
     override def read(json: JsValue): Rule = json match {
       case JsObject(fields) =>
         fields.getOrElse("type", "undefined") match {
@@ -51,19 +53,25 @@ object SchemaParser {
         }
     }
 
-    private def makeSetRule(fields: Map[String, JsValue]): IntSetRule = {
-      val setValues = fields.get("values").get match {
-        case JsArray(values) =>
-          values.map {
-            case JsNumber(number) => number.toInt
-          }
-      }
+    private def makeSetRule(fields: Map[String, JsValue]): Rule = {
 
       val distributionValue = fields.get("distribution").get match {
         case JsNumber(value) => value.toDouble
       }
 
-      IntSetRule(setValues.toSet, DistributionValue(distributionValue))
+      fields.get("values").get match {
+        case JsArray(values) =>
+          val allNumbers = values.forall(x => x.isInstanceOf[JsNumber])
+          val rule =
+            if (allNumbers) {
+              val setValues = values.map { case JsNumber(value) => value.toInt }
+              IntSetRule(setValues.toSet, DistributionValue(distributionValue))
+            } else {
+              val setValues = values.map { case JsString(value) => value }
+              StringSetRule(setValues.toSet, DistributionValue(distributionValue))
+            }
+          rule
+      }
     }
 
     private def makeRangeRule(fields: Map[String, JsValue]): RangeRule = {

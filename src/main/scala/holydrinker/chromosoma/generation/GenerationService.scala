@@ -6,13 +6,13 @@ import scala.util.Random
 
 object GenerationService {
 
-  def generateString(size: Int): String =
-    Random.alphanumeric.take(10).mkString
+  def generateString(rules: List[Rule]): String =
+    StringService.generate(rules)
 
   def generateInteger(rules: List[Rule]): Int =
     IntegerService.generate(rules)
 
-  def generateNumeric(rules: List[Rule]): Double =
+  def generateDecimal(rules: List[Rule]): Double =
     DecimalService.generate(rules)
 
   def generateBoolean(rules: List[Rule]): Boolean =

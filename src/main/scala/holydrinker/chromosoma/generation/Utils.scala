@@ -1,10 +1,10 @@
 package holydrinker.chromosoma.generation
 
-import holydrinker.chromosoma.model.{ BooleanRule, IntSetRule, RangeRule, Rule }
+import holydrinker.chromosoma.model.{ BooleanRule, IntSetRule, RangeRule, Rule, StringSetRule }
 
 import scala.util.Random
 
-object CommonUtils {
+object Utils {
 
   case class DistributionSlot(rule: Rule, slotUpperBound: Double)
 
@@ -13,6 +13,14 @@ object CommonUtils {
       true
     else
       false
+
+  def generateString[R <: Rule](seed: Double, rules: List[R]): String = {
+    val selectedRule = selectRule(seed, rules)
+    selectedRule match {
+      case StringSetRule(set, _) =>
+        set.toList(Random.nextInt(set.size))
+    }
+  }
 
   def generateDecimal[R <: Rule](seed: Double, rules: List[R]): Double = {
     val selectedRule = selectRule(seed, rules)

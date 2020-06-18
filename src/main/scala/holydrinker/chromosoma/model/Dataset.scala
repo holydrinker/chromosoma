@@ -19,14 +19,14 @@ object Dataset {
     val record = new GenericData.Record(avroSchema)
 
     chromoSchema.fields.foreach {
-      case ChromoField(name, ChromoString, _) =>
-        record.put(name, GenerationService.generateString(10))
+      case ChromoField(name, ChromoString, rules) =>
+        record.put(name, GenerationService.generateString(rules))
 
       case ChromoField(name, ChromoInt, rules) =>
         record.put(name, GenerationService.generateInteger(rules))
 
       case ChromoField(name, ChromoDecimal, rules) =>
-        record.put(name, GenerationService.generateNumeric(rules))
+        record.put(name, GenerationService.generateDecimal(rules))
 
       case ChromoField(name, ChromoBoolean, rules) =>
         record.put(name, GenerationService.generateBoolean(rules))

@@ -6,7 +6,13 @@ class DatasetSuite extends FunSuite {
 
   test("simple schema with one range rule") {
     val fields = Seq(
-      ChromoField("name", ChromoString),
+      ChromoField(
+        "name",
+        ChromoString,
+        List(
+          StringSetRule(Set("dave", "simone"), DistributionValue(1.0))
+        )
+      ),
       ChromoField(
         "age",
         ChromoInt,
