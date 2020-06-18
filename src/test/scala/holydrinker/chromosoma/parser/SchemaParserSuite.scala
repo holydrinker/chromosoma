@@ -1,13 +1,17 @@
 package holydrinker.chromosoma.parser
 
 import holydrinker.chromosoma.model.{
+  BooleanRule,
+  ChromoBoolean,
+  ChromoDecimal,
   ChromoField,
   ChromoInt,
   ChromoSchema,
   ChromoString,
   DistributionValue,
   IntSetRule,
-  RangeRule
+  RangeRule,
+  StringSetRule
 }
 import munit.FunSuite
 
@@ -19,13 +23,34 @@ class SchemaParserSuite extends FunSuite {
     val expected =
       ChromoSchema(
         Seq(
-          ChromoField("name", ChromoString, List()),
+          ChromoField(
+            "name",
+            ChromoString,
+            List(
+              StringSetRule(Set("dave", "simon"), DistributionValue(1.0))
+            )
+          ),
           ChromoField(
             "age",
             ChromoInt,
             List(
               IntSetRule(Set(100), DistributionValue(0.1)),
               RangeRule(Range(10, 99), DistributionValue(0.9))
+            )
+          ),
+          ChromoField(
+            "budget",
+            ChromoDecimal,
+            List(
+              IntSetRule(Set(100), DistributionValue(0.5)),
+              RangeRule(Range(1, 10), DistributionValue(0.5))
+            )
+          ),
+          ChromoField(
+            "married",
+            ChromoBoolean,
+            List(
+              BooleanRule(DistributionValue(1.0), DistributionValue(0.0))
             )
           )
         )

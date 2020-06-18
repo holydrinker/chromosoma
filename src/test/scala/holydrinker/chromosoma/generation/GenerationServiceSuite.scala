@@ -3,15 +3,14 @@ package holydrinker.chromosoma.generation
 import holydrinker.chromosoma.model.{ BooleanRule, DistributionValue, RangeRule, StringSetRule }
 import munit.FunSuite
 
-class SingleTypeGenerationServiceSuite extends FunSuite {
+class GenerationServiceSuite extends FunSuite {
 
   test("Basic integer generation") {
-
     val rules = List(
       RangeRule(Range(10, 100), DistributionValue(1.0))
     )
 
-    val generatedInt = IntegerService.generate(rules)
+    val generatedInt = GenerationService.generateInteger(rules)
     assert(generatedInt >= 10 && generatedInt <= 100)
   }
 
@@ -21,7 +20,7 @@ class SingleTypeGenerationServiceSuite extends FunSuite {
       RangeRule(Range(10, 100), DistributionValue(1.0))
     )
 
-    val generatedInt = DecimalService.generate(rules)
+    val generatedInt = GenerationService.generateDecimal(rules)
     assert(generatedInt >= 10 && generatedInt <= 100)
   }
 
@@ -33,7 +32,7 @@ class SingleTypeGenerationServiceSuite extends FunSuite {
     )
     assert(trueValue)
 
-    val falseValue = BooleanService.generate(
+    val falseValue = GenerationService.generateBoolean(
       List(
         BooleanRule(falseDistribution = DistributionValue(1), trueDistribution = DistributionValue(0))
       )
@@ -50,7 +49,7 @@ class SingleTypeGenerationServiceSuite extends FunSuite {
       StringSetRule(set2, DistributionValue(0.5))
     )
 
-    val result = StringService.generate(rules)
+    val result = GenerationService.generateString(rules)
     set1.union(set2).contains(result)
   }
 

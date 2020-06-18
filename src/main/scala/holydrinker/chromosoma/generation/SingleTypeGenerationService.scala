@@ -12,7 +12,7 @@ object IntegerService extends SingleTypeGenerationService[Int] {
 
   override def generate[R <: Rule](rules: List[R]): Int = {
     val seed = Random.nextFloat()
-    CommonUtils.generateDecimal(seed, rules).toInt
+    Utils.generateDecimal(seed, rules).toInt
   }
 
 }
@@ -20,7 +20,7 @@ object IntegerService extends SingleTypeGenerationService[Int] {
 object DecimalService extends SingleTypeGenerationService[Double] {
   override def generate[R <: Rule](rules: List[R]): Double = {
     val seed = Random.nextFloat()
-    CommonUtils.generateDecimal(seed, rules)
+    Utils.generateDecimal(seed, rules)
   }
 }
 
@@ -29,7 +29,7 @@ object BooleanService extends SingleTypeGenerationService[Boolean] {
     assert(rules.size == 1)
     val rule = getStandardBooleanRuleIfNoRulesProvided(rules)
     val seed = Random.nextFloat()
-    CommonUtils.generateBoolean(seed, rule)
+    Utils.generateBoolean(seed, rule)
   }
 
   private def getStandardBooleanRuleIfNoRulesProvided[R <: Rule](rules: List[R]): BooleanRule =
@@ -39,4 +39,12 @@ object BooleanService extends SingleTypeGenerationService[Boolean] {
       case None =>
         BooleanRule(trueDistribution = DistributionValue(0.5), falseDistribution = DistributionValue(0.5))
     }
+}
+
+object StringService extends SingleTypeGenerationService[String] {
+  override def generate[R <: Rule](rules: List[R]): String = {
+    val seed = Random.nextFloat()
+    Utils.generateString(seed, rules)
+  }
+
 }

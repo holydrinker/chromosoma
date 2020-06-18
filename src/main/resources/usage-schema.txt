@@ -4,7 +4,11 @@
          "name":"name",
          "dataType":"string",
          "rules":[
-
+            {
+                "type": "set",
+                "values": ["peppo","lorusso"],
+                "distribution": 1.0
+            }
          ]
       },
       {
