@@ -1,20 +1,19 @@
 package holydrinker.chromosoma.parser
 
-import cats.Traverse
 import holydrinker.chromosoma.model.{ ChromoBoolean, ChromoDecimal, ChromoField, ChromoInt, ChromoSchema, ChromoString }
 import cats.implicits._
-import cats.instances.list._
-import cats.instances.either._
 
 object SchemaValidator {
 
-  type InvalidTypeInSchemaError = String
+  type ErrorOr[T] = Either[String, T]
 
-  def validate(schema: ParsedChromoSchema): Either[Error, ChromoSchema] =
-    null
+  def validateFieldTypes(schema: ParsedChromoSchema): ErrorOr[ChromoSchema] =
+    schema.fields
+      .traverse(validateSingleFieldType)
+      .map(ChromoSchema(_))
 
-  private def validateDataType(schema: ParsedChromoSchema): Either[InvalidTypeInSchemaError, ChromoSchema] = {
-    val validFields: List[Either[InvalidTypeInSchemaError, ChromoField]] = schema.fields.map {
+  private def validateSingleFieldType(field: ParsedChromoField): ErrorOr[ChromoField] =
+    field match {
       case ParsedChromoField(name, "int", rules) =>
         Right(ChromoField(name, ChromoInt, rules))
       case ParsedChromoField(name, "string", rules) =>
@@ -23,18 +22,8 @@ object SchemaValidator {
         Right(ChromoField(name, ChromoDecimal, rules))
       case ParsedChromoField(name, "boolean", rules) =>
         Right(ChromoField(name, ChromoBoolean, rules))
-      case ParsedChromoField(name, _, rules) =>
-        Left("invalid type")
+      case ParsedChromoField(name, invalidType, _) =>
+        Left(s"Unknown type in field $name: $invalidType")
     }
-
-    Traverse[List].flatTraverse(validFields) {
-      case Right(value) => Right(ChromoSchema(List(value)))
-      case Left(_)      => Left("invalid schema")
-    }
-
-    val y = Traverse[List].traverse(validFields)
-
-    null // con una applicative o traverse devo trasformare la lista di right di field in un right di field
-  }
 
 }
