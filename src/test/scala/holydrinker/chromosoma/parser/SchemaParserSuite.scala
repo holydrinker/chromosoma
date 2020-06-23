@@ -1,72 +1,60 @@
 package holydrinker.chromosoma.parser
 
-import holydrinker.chromosoma.model.{
-  BooleanRule,
-  ChromoBoolean,
-  ChromoDecimal,
-  ChromoField,
-  ChromoInt,
-  ChromoSchema,
-  ChromoString,
-  DistributionValue,
-  IntSetRule,
-  RangeRule,
-  StringSetRule
-}
+import holydrinker.chromosoma.model.{ BooleanRule, IntSetRule, RangeRule, StringSetRule }
 import munit.FunSuite
 
 class SchemaParserSuite extends FunSuite {
 
   test("parse simple and valid schema") {
-    val inputStream = getClass.getResourceAsStream("/parsing/simple-valid-schema.json")
-    val actual      = SchemaParser.fromInputStream(inputStream)
+    val path   = "src/test/resources/parsing/simple-valid-schema.json"
+    val actual = SchemaParser.fromPath(path)
     val expected =
-      ChromoSchema(
-        Seq(
-          ChromoField(
+      ParsedChromoSchema(
+        List(
+          ParsedChromoField(
             "name",
-            ChromoString,
+            "string",
             List(
-              StringSetRule(Set("dave", "simon"), DistributionValue(1.0))
+              StringSetRule(Set("dave", "simon"), 1.0)
             )
           ),
-          ChromoField(
+          ParsedChromoField(
             "age",
-            ChromoInt,
+            "int",
             List(
-              IntSetRule(Set(100), DistributionValue(0.1)),
-              RangeRule(Range(10, 99), DistributionValue(0.9))
+              IntSetRule(Set(100), 0.1),
+              RangeRule(10, 99, 0.9)
             )
           ),
-          ChromoField(
+          ParsedChromoField(
             "budget",
-            ChromoDecimal,
+            "decimal",
             List(
-              IntSetRule(Set(100), DistributionValue(0.5)),
-              RangeRule(Range(1, 10), DistributionValue(0.5))
+              IntSetRule(Set(100), 0.5),
+              RangeRule(1, 10, 0.5)
             )
           ),
-          ChromoField(
+          ParsedChromoField(
             "married",
-            ChromoBoolean,
+            "boolean",
             List(
-              BooleanRule(DistributionValue(1.0), DistributionValue(0.0))
+              BooleanRule(1.0, 0.0)
             )
           )
         )
       )
 
-    assert(actual == expected)
+    assert(actual == Right(expected))
   }
 
   test("parse schema with not string datatype field".fail) {
-    val inputStream = getClass.getResourceAsStream("/parsing/not-string-datatype-schema.json")
-    SchemaParser.fromInputStream(inputStream)
+    val path = getClass.getResource("/parsing/not-string-datatype-schema.json").toString
+    SchemaParser.fromPath(path)
   }
 
   test("parse schema with missing required fields".fail) {
-    val inputStream = getClass.getResourceAsStream("/parsing/missing-required-field-schema.json")
-    SchemaParser.fromInputStream(inputStream)
+    val inputStream = getClass.getResource("/parsing/missing-required-field-schema.json").toString
+    SchemaParser.fromPath(inputStream)
   }
 
 }

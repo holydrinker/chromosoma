@@ -1,6 +1,6 @@
 package holydrinker.chromosoma
 
-import holydrinker.chromosoma.model.{ ChromoSchema, Dataset, DistributionValue, RangeRule }
+import holydrinker.chromosoma.model.{ ChromoSchema, Dataset }
 import holydrinker.chromosoma.writers.DatasetWriter
 
 object Usage {

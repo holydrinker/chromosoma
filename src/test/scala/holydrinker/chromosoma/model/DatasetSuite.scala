@@ -10,28 +10,28 @@ class DatasetSuite extends FunSuite {
         "name",
         ChromoString,
         List(
-          StringSetRule(Set("dave", "simone"), DistributionValue(1.0))
+          StringSetRule(Set("dave", "simone"), 1.0)
         )
       ),
       ChromoField(
         "age",
         ChromoInt,
         List(
-          RangeRule(Range(0, 10), DistributionValue(1.0))
+          RangeRule(0, 10, 1.0)
         )
       ),
       ChromoField(
         "budget",
         ChromoDecimal,
         List(
-          RangeRule(Range(0, 10), DistributionValue(1.0))
+          RangeRule(0, 10, 1.0)
         )
       ),
       ChromoField(
         "married",
         ChromoBoolean,
         List(
-          BooleanRule(trueDistribution = DistributionValue(1), falseDistribution = DistributionValue(0))
+          BooleanRule(`true` = 1, `false` = 0)
         )
       )
     )

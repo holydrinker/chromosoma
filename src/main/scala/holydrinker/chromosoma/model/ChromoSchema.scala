@@ -12,10 +12,10 @@ case class ChromoSchema(fields: Seq[ChromoField])
 
 object ChromoSchema {
 
-  def fromJson(path: String): ChromoSchema = {
-    val jsonInputStream = new FileInputStream(path)
-    SchemaParser.fromInputStream(jsonInputStream)
-  }
+  def fromJson(path: String): ChromoSchema =
+    // val jsonInputStream = new FileInputStream(path)
+    // SchemaParser.fromPath(jsonInputStream)
+    null
 
   def toAvroSchema(chromoSchema: ChromoSchema): Schema = {
     val fieldTemplate = "{\"name\": \"%s\", \"type\": \"%s\"}"
