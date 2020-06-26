@@ -6,10 +6,16 @@ import holydrinker.chromosoma.writers.DatasetWriter
 object Usage {
 
   def main(args: Array[String]): Unit = {
-    val schema  = ChromoSchema.fromJson("src/main/resources/usage-schema.txt")
-    val dataset = Dataset.fromSchema(schema, instances = 10)
-    val writer  = DatasetWriter(format = "csv")
-    writer.save(dataset, path = "result.csv")
+    val input     = "src/main/resources/usage-schema.txt"
+    val instances = 10
+    val format    = "csv"
+    val output    = "result.csv"
+
+    for {
+      schema  <- ChromoSchema.fromJson(input)
+      dataset <- Dataset.fromSchema(schema, instances)
+    } DatasetWriter(format).save(dataset, output)
+
   }
 
 }

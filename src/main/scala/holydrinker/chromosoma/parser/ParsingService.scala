@@ -14,7 +14,7 @@ case class ParsedChromoSchema(fields: List[ParsedChromoField])
 
 case class ParsedChromoField(name: String, dataType: String, rules: List[Rule])
 
-object SchemaParser {
+object ParsingService {
 
   private implicit val rulesDecoder: Decoder[Rule] =
     List[Decoder[Rule]](

@@ -5,7 +5,7 @@ import munit.FunSuite
 class DatasetSuite extends FunSuite {
 
   test("simple schema with one range rule") {
-    val fields = Seq(
+    val fields = List(
       ChromoField(
         "name",
         ChromoString,
@@ -39,7 +39,7 @@ class DatasetSuite extends FunSuite {
     val schema = ChromoSchema(fields)
     val n      = 1
 
-    val result = Dataset.fromSchema(schema, n)
+    val result = Dataset.fromSchema(schema, n).right.get
 
     val age     = result.rows.head.get("age").asInstanceOf[Int]
     val budget  = result.rows.head.get("budget").asInstanceOf[Double]

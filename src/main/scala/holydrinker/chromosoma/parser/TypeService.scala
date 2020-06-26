@@ -3,16 +3,14 @@ package holydrinker.chromosoma.parser
 import holydrinker.chromosoma.model.{ ChromoBoolean, ChromoDecimal, ChromoField, ChromoInt, ChromoSchema, ChromoString }
 import cats.implicits._
 
-object SchemaValidator {
+object TypeService {
 
-  type ErrorOr[T] = Either[String, T]
-
-  def validateFieldTypes(schema: ParsedChromoSchema): ErrorOr[ChromoSchema] =
+  def validateParsedSchema(schema: ParsedChromoSchema): Either[String, ChromoSchema] =
     schema.fields
       .traverse(validateSingleFieldType)
       .map(ChromoSchema(_))
 
-  private def validateSingleFieldType(field: ParsedChromoField): ErrorOr[ChromoField] =
+  private def validateSingleFieldType(field: ParsedChromoField): Either[String, ChromoField] =
     field match {
       case ParsedChromoField(name, "int", rules) =>
         Right(ChromoField(name, ChromoInt, rules))
@@ -25,5 +23,4 @@ object SchemaValidator {
       case ParsedChromoField(name, invalidType, _) =>
         Left(s"Unknown type in field $name: $invalidType")
     }
-
 }

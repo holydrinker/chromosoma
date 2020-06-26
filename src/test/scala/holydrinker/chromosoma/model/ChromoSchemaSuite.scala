@@ -11,7 +11,7 @@ class ChromoSchemaSuite extends FunSuite {
 
     val expected =
       ChromoSchema(
-        Seq(
+        List(
           ChromoField(
             "name",
             ChromoString,
@@ -44,22 +44,22 @@ class ChromoSchemaSuite extends FunSuite {
           )
         )
       )
-    assert(actual == expected)
+    assert(actual == Right(expected))
   }
 
-  test("Fail in making schema with not string datatype field".fail) {
-    val jsonPath = getClass.getResource("/parsing/not-string-datatype-schema.json").toString
-    ChromoSchema.fromJson(jsonPath)
+  test("Read schema with not string datatype field") {
+    val schemaPath = "src/test/resources/parsing/not-string-datatype-schema.json"
+    assert(ChromoSchema.fromJson(schemaPath).isLeft)
   }
 
-  test("Fail in making schema with missing required fields".fail) {
-    val jsonPath = getClass.getResource("/parsing/missing-required-field-schema.json").toString
-    ChromoSchema.fromJson(jsonPath)
+  test("Read schema with missing required fields") {
+    val schemaPath = "src/test/resources/parsing/missing-required-field-schema.json"
+    assert(ChromoSchema.fromJson(schemaPath).isLeft)
   }
 
   test("convert to avro schema") {
     val chromoSchema = ChromoSchema(
-      Seq(
+      List(
         ChromoField("name", ChromoString),
         ChromoField("age", ChromoInt),
         ChromoField("budget", ChromoDecimal),

@@ -9,10 +9,10 @@ case class Dataset(rows: Seq[GenericRecord], schema: Schema)
 
 object Dataset {
 
-  def fromSchema(chromoSchema: ChromoSchema, instances: Int): Dataset = {
+  def fromSchema(chromoSchema: ChromoSchema, instances: Int): Either[String, Dataset] = {
     val avroSchema = ChromoSchema.toAvroSchema(chromoSchema)
     val rows       = (0 to instances).map(_ => makeGenericRecord(chromoSchema, avroSchema))
-    Dataset(rows, avroSchema)
+    Right(Dataset(rows, avroSchema))
   }
 
   private def makeGenericRecord(chromoSchema: ChromoSchema, avroSchema: Schema): GenericRecord = {
