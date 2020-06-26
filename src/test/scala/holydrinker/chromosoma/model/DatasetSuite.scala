@@ -5,33 +5,33 @@ import munit.FunSuite
 class DatasetSuite extends FunSuite {
 
   test("simple schema with one range rule") {
-    val fields = Seq(
+    val fields = List(
       ChromoField(
         "name",
         ChromoString,
         List(
-          StringSetRule(Set("dave", "simone"), DistributionValue(1.0))
+          StringSetRule(Set("dave", "simone"), 1.0)
         )
       ),
       ChromoField(
         "age",
         ChromoInt,
         List(
-          RangeRule(Range(0, 10), DistributionValue(1.0))
+          RangeRule(0, 10, 1.0)
         )
       ),
       ChromoField(
         "budget",
         ChromoDecimal,
         List(
-          RangeRule(Range(0, 10), DistributionValue(1.0))
+          RangeRule(0, 10, 1.0)
         )
       ),
       ChromoField(
         "married",
         ChromoBoolean,
         List(
-          BooleanRule(trueDistribution = DistributionValue(1), falseDistribution = DistributionValue(0))
+          BooleanRule(`true` = 1, `false` = 0)
         )
       )
     )
@@ -39,7 +39,7 @@ class DatasetSuite extends FunSuite {
     val schema = ChromoSchema(fields)
     val n      = 1
 
-    val result = Dataset.fromSchema(schema, n)
+    val result = Dataset.fromSchema(schema, n).right.get
 
     val age     = result.rows.head.get("age").asInstanceOf[Int]
     val budget  = result.rows.head.get("budget").asInstanceOf[Double]

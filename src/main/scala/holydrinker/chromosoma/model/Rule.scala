@@ -1,23 +1,17 @@
 package holydrinker.chromosoma.model
 
-sealed trait Rule {
+trait Rule {
   def distribution: Double
 }
 
-case class RangeRule(bounds: Range, distributionValue: DistributionValue) extends Rule {
-  override def distribution: Double = distributionValue.value
+case class RangeRule(min: Int, max: Int, distribution: Double) extends Rule {
+  def bounds = Range(min, max)
 }
 
-case class IntSetRule(values: Set[Int], distributionValue: DistributionValue) extends Rule {
-  override def distribution: Double = distributionValue.value
-}
+case class IntSetRule(values: Set[Int], distribution: Double) extends Rule
 
-case class StringSetRule(values: Set[String], distributionValue: DistributionValue) extends Rule {
-  override def distribution: Double = distributionValue.value
-}
+case class StringSetRule(values: Set[String], distribution: Double) extends Rule
 
-case class BooleanRule(trueDistribution: DistributionValue, falseDistribution: DistributionValue) extends Rule {
-  override def distribution: Double = 1.0
+case class BooleanRule(`true`: Double, `false`: Double) extends Rule {
+  override def distribution: Double = `true` + `false`
 }
-
-case class DistributionValue(value: Double)

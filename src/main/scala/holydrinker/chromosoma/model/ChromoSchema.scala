@@ -1,21 +1,18 @@
 package holydrinker.chromosoma.model
 
-import java.io.{ FileInputStream, InputStream }
-
-import holydrinker.chromosoma.model
-import holydrinker.chromosoma.parser.SchemaParser
+import holydrinker.chromosoma.parser.{ ParsingService, ValidationService }
 import org.apache.avro.Schema
 
 case class ChromoField(name: String, dataType: ChromoType, rules: List[Rule] = List.empty[Rule])
 
-case class ChromoSchema(fields: Seq[ChromoField])
+case class ChromoSchema(fields: List[ChromoField])
 
 object ChromoSchema {
 
-  def fromJson(path: String): ChromoSchema = {
-    val jsonInputStream = new FileInputStream(path)
-    SchemaParser.fromInputStream(jsonInputStream)
-  }
+  def fromJson(path: String): Either[Any, ChromoSchema] =
+    ParsingService
+      .fromPath(path)
+      .flatMap(ValidationService.validate)
 
   def toAvroSchema(chromoSchema: ChromoSchema): Schema = {
     val fieldTemplate = "{\"name\": \"%s\", \"type\": \"%s\"}"

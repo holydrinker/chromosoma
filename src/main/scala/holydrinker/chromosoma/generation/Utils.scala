@@ -9,7 +9,7 @@ object Utils {
   case class DistributionSlot(rule: Rule, slotUpperBound: Double)
 
   def generateBoolean(seed: Double, rule: BooleanRule): Boolean =
-    if (seed <= rule.trueDistribution.value)
+    if (seed <= rule.`true`)
       true
     else
       false
@@ -25,8 +25,8 @@ object Utils {
   def generateDecimal[R <: Rule](seed: Double, rules: List[R]): Double = {
     val selectedRule = selectRule(seed, rules)
     selectedRule match {
-      case RangeRule(range, _) =>
-        pickRandomDoubleWithinRange(range)
+      case RangeRule(min, max, _) =>
+        pickRandomDoubleWithinRange(Range(min, max))
       case IntSetRule(set, _) =>
         pickRandomValueWithinSet(set)
     }

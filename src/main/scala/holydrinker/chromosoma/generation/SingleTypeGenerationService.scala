@@ -1,6 +1,6 @@
 package holydrinker.chromosoma.generation
 
-import holydrinker.chromosoma.model.{ BooleanRule, DistributionValue, Rule }
+import holydrinker.chromosoma.model.{ BooleanRule, Rule }
 
 import scala.util.Random
 
@@ -37,7 +37,7 @@ object BooleanService extends SingleTypeGenerationService[Boolean] {
       case Some(rule: BooleanRule) =>
         rule
       case None =>
-        BooleanRule(trueDistribution = DistributionValue(0.5), falseDistribution = DistributionValue(0.5))
+        BooleanRule(`true` = 0.5, `false` = 0.5)
     }
 }
 
