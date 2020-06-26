@@ -9,7 +9,7 @@ case class ChromoSchema(fields: List[ChromoField])
 
 object ChromoSchema {
 
-  def fromJson(path: String): Either[Any, ChromoSchema] =
+  def fromJson(path: String): Either[Exception, ChromoSchema] =
     ParsingService
       .fromPath(path)
       .flatMap(ValidationService.validate)
