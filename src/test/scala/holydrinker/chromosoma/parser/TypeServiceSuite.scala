@@ -1,5 +1,6 @@
 package holydrinker.chromosoma.parser
 
+import holydrinker.chromosoma.error.ValidationError
 import holydrinker.chromosoma.model.{
   ChromoBoolean,
   ChromoDecimal,
@@ -50,7 +51,7 @@ class TypeServiceSuite extends FunSuite {
         )
       )
 
-    val expected = Left("Unknown type in field invalid_field: invalid_type")
+    val expected = Left(ValidationError("Unknown type in field invalid_field: invalid_type"))
 
     val actual = TypeService.validateParsedSchema(schema)
 
