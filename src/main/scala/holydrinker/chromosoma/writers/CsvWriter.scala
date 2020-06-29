@@ -8,13 +8,16 @@ import scala.collection.JavaConverters._
 class CsvWriter(sep: String = ",") extends DatasetWriter {
 
   override def save(dataset: Dataset, path: String): Unit = {
-    val headers = dataset.schema.getFields.asScala.map(_.name())
-    val lines   = dataset.rows.map(recordToFlatString(_, headers))
+    val extensionPath = s"$path.$extension"
+    val headers       = dataset.schema.getFields.asScala.map(_.name())
+    val lines         = dataset.rows.map(recordToFlatString(_, headers))
 
-    val bw = new BufferedWriter(new FileWriter(new File(path)))
+    val bw = new BufferedWriter(new FileWriter(new File(extensionPath)))
     lines.foreach(line => bw.write(line + "\n"))
     bw.close()
   }
+
+  override def extension: String = "csv"
 
   private def recordToFlatString(record: GenericRecord, keys: Seq[String]): String =
     keys
