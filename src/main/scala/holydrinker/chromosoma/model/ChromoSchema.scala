@@ -1,6 +1,6 @@
 package holydrinker.chromosoma.model
 
-import holydrinker.chromosoma.parser.{ ParsingService, ValidationService }
+import holydrinker.chromosoma.parser.{ ParsedChromoField, ParsedChromoSchema, ParsingService, ValidationService }
 import org.apache.avro.Schema
 
 case class ChromoField(name: String, dataType: ChromoType, rules: List[Rule] = List.empty[Rule])
@@ -9,10 +9,13 @@ case class ChromoSchema(fields: List[ChromoField])
 
 object ChromoSchema {
 
-  def fromJson(path: String): Either[Exception, ChromoSchema] =
-    ParsingService
-      .fromPath(path)
-      .flatMap(ValidationService.validate)
+  def fromFields(fields: List[ParsedChromoField]): Either[Exception, ChromoSchema] = {
+    val schema = ParsedChromoSchema(fields)
+    ValidationService.validate(schema)
+  }
+
+  // .map(dna => ParsedChromoSchema(dna.fields))
+  // .flatMap(ValidationService.validate)
 
   def toAvroSchema(chromoSchema: ChromoSchema): Schema = {
     val fieldTemplate = "{\"name\": \"%s\", \"type\": \"%s\"}"

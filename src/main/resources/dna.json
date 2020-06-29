@@ -1,4 +1,10 @@
 {
+   "instances": 10,
+
+   "output": "result",
+
+   "format": "csv",
+
    "fields":[
       {
          "name":"name",
@@ -6,7 +12,7 @@
          "rules":[
             {
                 "type": "set",
-                "values": ["peppo","lorusso"],
+                "values": ["dave","simon"],
                 "distribution": 1.0
             }
          ]

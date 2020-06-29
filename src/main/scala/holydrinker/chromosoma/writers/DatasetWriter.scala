@@ -6,6 +6,8 @@ trait DatasetWriter {
 
   def save(dataset: Dataset, path: String)
 
+  def extension: String
+
 }
 
 object DatasetWriter {

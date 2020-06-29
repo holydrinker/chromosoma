@@ -24,13 +24,13 @@ class AvroWriterSuite extends FunSuite with TempDirSupport {
       val artistDataset     = Dataset(schema = artistSchema, rows = serializedArtists)
 
       // Write dataset
-      val resultPath = Paths.get(tempDir.getAbsolutePath, "result.avro").toAbsolutePath.toString
+      val resultPath = Paths.get(tempDir.getAbsolutePath, "result").toAbsolutePath.toString
       new AvroWriter().save(artistDataset, resultPath)
 
       // Check dataset
       val is = AvroInputStream
         .data[Artist]
-        .from(new File(resultPath))
+        .from(new File(s"$resultPath.avro"))
         .build(artistSchema)
 
       val actualDeserializedArtists = is.iterator.toSet

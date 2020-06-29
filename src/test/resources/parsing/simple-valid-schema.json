@@ -1,4 +1,10 @@
 {
+  "output": "result",
+
+  "format": "csv",
+
+  "instances": 10,
+
   "fields":[
     {
       "name":"name",

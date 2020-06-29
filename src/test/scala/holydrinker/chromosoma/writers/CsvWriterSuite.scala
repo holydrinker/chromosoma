@@ -22,11 +22,11 @@ class CsvWriterSuite extends FunSuite with TempDirSupport {
       val artistDataset     = Dataset(schema = artistSchema, rows = serializedArtists)
 
       // Write dataset
-      val resultPath = Paths.get(tempDir.getAbsolutePath, "result.csv").toAbsolutePath.toString
+      val resultPath = Paths.get(tempDir.getAbsolutePath, "result").toAbsolutePath.toString
       new CsvWriter(sep = ",").save(artistDataset, resultPath)
 
       // Check dataset
-      val actualArtistSet = scala.io.Source.fromFile(resultPath).getLines().toSet
+      val actualArtistSet = scala.io.Source.fromFile(s"$resultPath.csv").getLines().toSet
 
       val expectedArtistSet = Set(
         "simon,neil,41,guitar",
