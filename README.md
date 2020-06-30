@@ -183,6 +183,19 @@ In the example above, all the `married` rows will be equals to `false`
 - JDBC (TODO)
 - REST (TODO)
 
+---
+
 ## Generation Engine Modeling
 
 ![](doc/img/conceptual-model.png)
+
+---
+
+#### How to run
+The only supported mode is standalone. More interactive ways to run to applicative will be developed soon.
+```bash
+git clone https://github.com/holydrinker/chromosoma.git
+cd chromosoma
+sbt assembly
+java -jar chromosoma-assembly-0.1.0.jar <path-to-schema>.json
+```

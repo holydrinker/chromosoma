@@ -7,10 +7,10 @@ import holydrinker.chromosoma.writers.DatasetWriter
 object Main {
 
   def main(args: Array[String]): Unit = {
-    val input = "src/main/resources/dna.json"
+    val path = args(0)
 
     for {
-      dna     <- ParsingService.fromPath(input)
+      dna     <- ParsingService.fromPath(path)
       schema  <- ChromoSchema.fromFields(dna.fields)
       dataset <- Dataset.fromSchema(schema, dna.instances)
     } DatasetWriter(dna.format).save(dataset, dna.output)
