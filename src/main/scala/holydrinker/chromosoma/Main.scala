@@ -4,7 +4,7 @@ import holydrinker.chromosoma.model.{ ChromoSchema, Dataset }
 import holydrinker.chromosoma.parser.ParsingService
 import holydrinker.chromosoma.writers.DatasetWriter
 
-object Usage {
+object Main {
 
   def main(args: Array[String]): Unit = {
     val input = "src/main/resources/dna.json"
