@@ -103,17 +103,17 @@ simon,81,9.032302178134143,true
 ## Supported Field Types
 - string
 - int
-- Decimal
+- decimal
 - boolean
 - date (TODO)
 
 ---
 
 ## Rules
-Every field comes with a set of rules, and every rule comes with a distribution. The distribution you define is used within the generation engine to understand how to distribute your model your data. The sum of the rule distributions for a single rule should be equals to 1.
+Every field comes with a set of rules, and every rule comes with a distribution. The distribution you define is used within the generation engine to understand how to model your data. The sum of the rule distributions for a single rule should be equal to 1.
 
 #### Supported string rules
-- String set: the string to be generated is selected randomly from `values`
+- String set: the string to be generated is randomly selected from `values` set
 ```json
 {
   "name": "first name",
@@ -127,11 +127,11 @@ Every field comes with a set of rules, and every rule comes with a distribution.
     ]
 }
 ```
-In the example above, all the first names will be equals to `dave` or `simon`.
+In the example above, all the first names will be equal to `dave` or `simon`.
 
 #### Supported int rules
-- Integer set: the integer to be generated is selected randomly from `values`
-- Range: the integer to be generated is selected randomly between min and max
+- Integer set: the integer to be generated is randomly selected from `values` set
+- Range: the integer to be generated is randomly selected between `min` and `max
 ```json
 {
      "name":"age",
@@ -154,13 +154,13 @@ In the example above, all the first names will be equals to `dave` or `simon`.
 }
 ```
 
-In the example above, ~10% of your ages will be equals to 100 and ~90% of your ages will be between 10 and 99.
+In the example above ~10% of your ages will be equal to 100 and ~90% of your ages will be between 10 and 99.
 
 #### Supported decimal rules
-Same as integer rules
+Same as integer rules (specialisation will be implemented soon).
 
 #### Supported boolean rules
-- Boolean: just define the false and true value distributions
+- Boolean: just define the false and true distribution values
 ```json
 {
      "name":"married",
@@ -174,7 +174,7 @@ Same as integer rules
      ]
 }
 ```
-In the example above, all the `married` rows will be equals to `false`
+In the example above, all the `married` rows will be equal to `false`
 
 ## Supported Output Format
 - CSV (with `,` separator)
@@ -192,10 +192,12 @@ In the example above, all the `married` rows will be equals to `false`
 ---
 
 #### How to run
-The only supported mode is standalone. More interactive ways to run to applicative will be developed soon.
+The only supported mode now is standalone. 
+
+More interactive running mode will be developed soon.
 ```bash
 git clone https://github.com/holydrinker/chromosoma.git
 cd chromosoma
 sbt assembly
-java -jar chromosoma-assembly-0.1.0.jar <path-to-schema>.json
+java -jar target/scala-2.12/chromosoma-assembly-0.1.0.jar <path-to-schema>.json
 ```
