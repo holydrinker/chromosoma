@@ -1,17 +1,17 @@
 package holydrinker.chromosoma.generation
 
-import holydrinker.chromosoma.generation.Utils.DistributionSlot
+import holydrinker.chromosoma.generation.GenerationUtils.DistributionSlot
 import holydrinker.chromosoma.model.{ BooleanRule, IntSetRule, RangeRule, StringSetRule }
 import munit.FunSuite
 
-class UtilsSuite extends FunSuite {
+class GenerationUtilsSuite extends FunSuite {
 
   test("low corner case") {
     val rules = List(
       RangeRule(0, 50, .8),
       RangeRule(51, 100, .2)
     )
-    val actual = Utils.generateDecimal(0.0, rules)
+    val actual = GenerationUtils.generateDecimal(0.0, rules)
     assert(0 <= actual && actual <= 50)
   }
 
@@ -20,7 +20,7 @@ class UtilsSuite extends FunSuite {
       RangeRule(0, 50, .8),
       RangeRule(51, 100, .2)
     )
-    val actual = Utils.generateDecimal(.79, rules)
+    val actual = GenerationUtils.generateDecimal(.79, rules)
     assert(0 <= actual && actual <= 50)
   }
 
@@ -29,7 +29,7 @@ class UtilsSuite extends FunSuite {
       RangeRule(0, 50, .8),
       RangeRule(51, 100, .2)
     )
-    val actual = Utils.generateDecimal(.8, rules)
+    val actual = GenerationUtils.generateDecimal(.8, rules)
     assert(0 <= actual && actual <= 50)
   }
 
@@ -38,7 +38,7 @@ class UtilsSuite extends FunSuite {
       RangeRule(0, 50, .8),
       RangeRule(51, 100, .2)
     )
-    val actual = Utils.generateDecimal(.21, rules)
+    val actual = GenerationUtils.generateDecimal(.21, rules)
     assert(0 <= actual && actual <= 50)
   }
 
@@ -47,7 +47,7 @@ class UtilsSuite extends FunSuite {
       RangeRule(0, 50, .8),
       RangeRule(51, 100, .2)
     )
-    val actual = Utils.generateDecimal(1, rules)
+    val actual = GenerationUtils.generateDecimal(1, rules)
     assert(51 <= actual && actual <= 100)
   }
 
@@ -56,8 +56,8 @@ class UtilsSuite extends FunSuite {
       RangeRule(0, 10, .8),
       IntSetRule(Set(100, 1000), .2)
     )
-    val itemFromRange = Utils.generateDecimal(.3, rules)
-    val itemFromSet   = Utils.generateDecimal(0.9, rules)
+    val itemFromRange = GenerationUtils.generateDecimal(.3, rules)
+    val itemFromSet   = GenerationUtils.generateDecimal(0.9, rules)
 
     assert(itemFromRange >= 0 && itemFromRange <= 10)
     assert(itemFromSet == 100 || itemFromSet == 1000)
@@ -69,7 +69,7 @@ class UtilsSuite extends FunSuite {
       RangeRule(51, 100, .2)
     )
 
-    val actual = Utils.rangeRulesToSlots(rules)
+    val actual = GenerationUtils.rangeRulesToSlots(rules)
 
     val expected = List(
       DistributionSlot(RangeRule(0, 50, .8), .8),
@@ -93,7 +93,7 @@ class UtilsSuite extends FunSuite {
       RangeRule(91, 100, .1)
     )
 
-    val actual = Utils.rangeRulesToSlots(rules)
+    val actual = GenerationUtils.rangeRulesToSlots(rules)
 
     val expected = List(
       DistributionSlot(RangeRule(1, 10, .1), 0.1),
@@ -114,10 +114,10 @@ class UtilsSuite extends FunSuite {
   test("generate boolean") {
     val rule = BooleanRule(`false` = 0.4, `true` = 0.6)
 
-    val trueValue = Utils.generateBoolean(0.2, rule)
+    val trueValue = GenerationUtils.generateBoolean(0.2, rule)
     assert(trueValue)
 
-    val falseValue = Utils.generateBoolean(0.7, rule)
+    val falseValue = GenerationUtils.generateBoolean(0.7, rule)
     assert(!falseValue)
 
   }
@@ -130,10 +130,10 @@ class UtilsSuite extends FunSuite {
       StringSetRule(set1, 0.5),
       StringSetRule(set2, 0.5)
     )
-    val result1 = Utils.generateString(0.1, rules)
+    val result1 = GenerationUtils.generateString(0.1, rules)
     assert(set1.contains(result1))
 
-    val result2 = Utils.generateString(0.8, rules)
+    val result2 = GenerationUtils.generateString(0.8, rules)
     assert(set2.contains(result2))
   }
 
