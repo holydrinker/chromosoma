@@ -1,5 +1,8 @@
 package holydrinker.chromosoma.model
 
+/**
+  * Represents the types of [[ChromoField]]
+  */
 sealed trait ChromoType
 
 case object ChromoString extends ChromoType

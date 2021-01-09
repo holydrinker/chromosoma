@@ -4,8 +4,19 @@ import holydrinker.chromosoma.model._
 import cats.implicits._
 import holydrinker.chromosoma.error.ValidationError
 
+/**
+  * Exposes services to validate the body of a [[ChromoSchema]]
+  */
 object SemanticsService {
 
+  /**
+    * Validates the schema's body.
+    * For example you cannot decalre range rule with only one value, you cannot decalre a boolean rule
+    * where the distribution of true + the distribution of false is > 1, and so on.
+    *
+    * @param schema the schema to be validated
+    * @return the same schema in input if is valid
+    */
   def validateSchema(schema: ChromoSchema): Either[ValidationError, ChromoSchema] =
     schema.fields
       .traverse(validateSingleFieldSemantics)
