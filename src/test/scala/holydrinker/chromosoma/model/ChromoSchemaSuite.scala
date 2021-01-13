@@ -1,6 +1,7 @@
 package holydrinker.chromosoma.model
 
-import holydrinker.chromosoma.parser.{ ParsedChromoField, ParsedChromoSchema }
+import cats.data.Validated.Valid
+import holydrinker.chromosoma.parser.ParsedChromoField
 import munit.FunSuite
 import org.apache.avro.Schema
 
@@ -79,7 +80,7 @@ class ChromoSchemaSuite extends FunSuite {
 
     val actual = ChromoSchema.fromFields(parsedFields)
 
-    assert(actual == Right(expected))
+    assert(actual == Valid(expected))
   }
 
   test("convert to avro schema") {

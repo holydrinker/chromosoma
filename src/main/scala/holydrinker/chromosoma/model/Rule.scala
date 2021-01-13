@@ -3,7 +3,7 @@ package holydrinker.chromosoma.model
 /**
   * Contains the information to generate the data for a generic feature.
   */
-trait Rule {
+sealed trait Rule {
 
   def distribution: Double
 }

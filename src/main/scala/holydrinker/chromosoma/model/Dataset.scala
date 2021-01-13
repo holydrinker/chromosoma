@@ -1,5 +1,7 @@
 package holydrinker.chromosoma.model
 
+import cats.data.Validated
+import cats.data.Validated.Valid
 import holydrinker.chromosoma.generation.GenerationService
 import holydrinker.chromosoma.writers.DatasetWriter
 import org.apache.avro.Schema
@@ -25,10 +27,10 @@ object Dataset {
     * @param instances number of instances
     * @return the [[Dataset]]
     */
-  def fromSchema(chromoSchema: ChromoSchema, instances: Int): Either[String, Dataset] = {
+  def fromSchema(chromoSchema: ChromoSchema, instances: Int): Validated[String, Dataset] = {
     val avroSchema = ChromoSchema.toAvroSchema(chromoSchema)
     val rows       = (0 to instances).map(_ => makeGenericRecord(chromoSchema, avroSchema))
-    Right(Dataset(rows, avroSchema))
+    Valid(Dataset(rows, avroSchema))
   }
 
   private def makeGenericRecord(chromoSchema: ChromoSchema, avroSchema: Schema): GenericRecord = {
