@@ -39,7 +39,7 @@ class DatasetSuite extends FunSuite {
     val schema = ChromoSchema(fields)
     val n      = 1
 
-    val result = Dataset.fromSchema(schema, n).right.get
+    val result: Dataset = Dataset.fromSchema(schema, n).toOption.get
 
     val age     = result.rows.head.get("age").asInstanceOf[Int]
     val budget  = result.rows.head.get("budget").asInstanceOf[Double]

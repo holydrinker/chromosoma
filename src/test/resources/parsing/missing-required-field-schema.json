@@ -1,0 +1,19 @@
+{
+  "output": "result",
+
+  "format": "csv",
+
+  "instances": 10,
+
+  "fields": [
+    {
+      "name": "name",
+      "rules": []
+    },
+    {
+      "name": "age",
+      "dataType": "string",
+      "rules": []
+    }
+  ]
+}

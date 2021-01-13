@@ -2,11 +2,11 @@ package holydrinker.chromosoma.parser
 
 import java.io.{ FileInputStream, StringWriter }
 import java.nio.charset.StandardCharsets
-
 import io.circe._
 import io.circe.parser._
 import io.circe.generic.auto._
-import cats.syntax.functor._
+import cats.implicits._
+import cats.data.Validated
 import holydrinker.chromosoma.model.{ BooleanRule, IntSetRule, RangeRule, Rule, StringSetRule }
 import org.apache.commons.io.IOUtils
 
@@ -56,13 +56,13 @@ object ParsingService {
     * @param path user-defined schema file path
     * @return maybe a [[Dna]]
     */
-  def fromPath(path: String): Either[Error, Dna] = {
+  def fromPath(path: String): Validated[Error, Dna] = {
     val inputStream = new FileInputStream(path)
     val writer      = new StringWriter()
     IOUtils.copy(inputStream, writer, StandardCharsets.UTF_8)
     val rawJson = writer.toString
 
-    decode[Dna](rawJson)
+    decode[Dna](rawJson).toValidated
   }
 
 }

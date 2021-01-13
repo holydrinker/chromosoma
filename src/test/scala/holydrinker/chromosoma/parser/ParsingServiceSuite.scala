@@ -1,5 +1,6 @@
 package holydrinker.chromosoma.parser
 
+import cats.data.Validated.Valid
 import holydrinker.chromosoma.model.{ BooleanRule, IntSetRule, RangeRule, StringSetRule }
 import munit.FunSuite
 
@@ -43,17 +44,25 @@ class ParsingServiceSuite extends FunSuite {
       )
 
     val expected = Dna(10, "result", "csv", fields)
-    assert(actual == Right(expected))
+    assert(actual == Valid(expected))
   }
 
-  test("parse schema with not string datatype field".fail) {
-    val path = getClass.getResource("/parsing/not-string-datatype-schema.json").toString
-    ParsingService.fromPath(path)
+  test("parse schema with not string datatype field") {
+    val path   = getClass.getResource("/parsing/not-string-datatype-schema.json").getPath
+    val result = ParsingService.fromPath(path)
+    assert(result.isInvalid)
   }
 
-  test("parse schema with missing required fields".fail) {
-    val inputStream = getClass.getResource("/parsing/missing-required-field-schema.json").toString
-    ParsingService.fromPath(inputStream)
+  test("parse schema with missing required fields") {
+    val inputStream = getClass.getResource("/parsing/missing-required-field-schema.json").getPath
+    val result      = ParsingService.fromPath(inputStream)
+    assert(result.isInvalid)
+  }
+
+  test("parse no sense schema") {
+    val inputStream = getClass.getResource("/parsing/no-sense-schema.json").getPath
+    val result      = ParsingService.fromPath(inputStream)
+    assert(result.isInvalid)
   }
 
 }
