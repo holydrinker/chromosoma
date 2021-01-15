@@ -15,7 +15,7 @@ class CsvWriter(sep: String = ",") extends DatasetWriter {
     * @param dataset the dataset
     * @param path the path
     */
-  override def save(dataset: Dataset, path: String): Unit = {
+  override def saveFile(dataset: Dataset, path: String): Unit = {
     val extensionPath = s"$path.$extension"
     val headers       = dataset.schema.getFields.asScala.map(_.name())
     val lines         = dataset.rows.map(recordToFlatString(_, headers))

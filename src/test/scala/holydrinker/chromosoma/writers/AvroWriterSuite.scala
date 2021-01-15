@@ -25,7 +25,7 @@ class AvroWriterSuite extends FunSuite with TempDirSupport {
 
       // Write dataset
       val resultPath = Paths.get(tempDir.getAbsolutePath, "result").toAbsolutePath.toString
-      new AvroWriter().save(artistDataset, resultPath)
+      new AvroWriter().saveFile(artistDataset, resultPath)
 
       // Check dataset
       val is = AvroInputStream

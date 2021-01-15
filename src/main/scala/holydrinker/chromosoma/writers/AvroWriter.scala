@@ -16,7 +16,7 @@ class AvroWriter extends DatasetWriter {
     * @param dataset the dataset
     * @param path the path
     */
-  override def save(dataset: Dataset, path: String): Unit = {
+  override def saveFile(dataset: Dataset, path: String): Unit = {
     val extensionPath  = s"$path.$extension"
     val file           = new File(extensionPath)
     val datumWriter    = new GenericDatumWriter[GenericRecord](dataset.schema)

@@ -1,10 +1,11 @@
 package holydrinker.chromosoma
 
+import holydrinker.chromosoma.logging.ChromoLogger
 import holydrinker.chromosoma.model.{ ChromoSchema, Dataset }
 import holydrinker.chromosoma.parser.ParsingService
 import holydrinker.chromosoma.writers.DatasetWriter
 
-object Main {
+object Main extends ChromoLogger {
 
   def main(args: Array[String]): Unit = {
     val path = args(0)
