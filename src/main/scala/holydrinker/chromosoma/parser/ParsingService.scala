@@ -7,6 +7,7 @@ import io.circe.parser._
 import io.circe.generic.auto._
 import cats.implicits._
 import cats.data.Validated
+import holydrinker.chromosoma.logging.ChromoLogger
 import holydrinker.chromosoma.model.{ BooleanRule, IntSetRule, RangeRule, Rule, StringSetRule }
 import org.apache.commons.io.IOUtils
 
@@ -40,7 +41,7 @@ case class ParsedChromoField(name: String, dataType: String, rules: List[Rule])
 /**
   * Exposes utilities to parse the user-defined schema.
   */
-object ParsingService {
+object ParsingService extends ChromoLogger {
 
   private implicit val rulesDecoder: Decoder[Rule] =
     List[Decoder[Rule]](
@@ -62,7 +63,13 @@ object ParsingService {
     IOUtils.copy(inputStream, writer, StandardCharsets.UTF_8)
     val rawJson = writer.toString
 
-    decode[Dna](rawJson).toValidated
+    val result = decode[Dna](rawJson).toValidated
+    if (result.isInvalid)
+      logError("Malformed input file")
+    else
+      logInfo(s"Read file: $path")
+
+    result
   }
 
 }

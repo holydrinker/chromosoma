@@ -23,7 +23,7 @@ class CsvWriterSuite extends FunSuite with TempDirSupport {
 
       // Write dataset
       val resultPath = Paths.get(tempDir.getAbsolutePath, "result").toAbsolutePath.toString
-      new CsvWriter(sep = ",").save(artistDataset, resultPath)
+      new CsvWriter(sep = ",").saveFile(artistDataset, resultPath)
 
       // Check dataset
       val actualArtistSet = scala.io.Source.fromFile(s"$resultPath.csv").getLines().toSet

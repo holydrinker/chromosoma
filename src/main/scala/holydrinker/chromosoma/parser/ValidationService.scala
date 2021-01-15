@@ -4,11 +4,12 @@ import cats.data.Validated
 import cats.implicits._
 import holydrinker.chromosoma.model.{ ChromoBoolean, ChromoDecimal, ChromoField, ChromoInt, ChromoSchema, ChromoString }
 import holydrinker.chromosoma.error.ValidationError
+import holydrinker.chromosoma.logging.ChromoLogger
 
 /**
   * Exposes utilities to validate a well written schema.
   */
-object ValidationService {
+object ValidationService extends ChromoLogger {
 
   private final val IntType     = "int"
   private final val StringType  = "string"
@@ -39,7 +40,9 @@ object ValidationService {
       case ParsedChromoField(name, BooleanType, rules) =>
         Right(ChromoField(name, ChromoBoolean, rules))
       case ParsedChromoField(name, invalidType, _) =>
-        Left(ValidationError(s"Unknown type in field $name: $invalidType"))
+        val msg = s"Unknown type in field $name: $invalidType"
+        logError(msg)
+        Left(ValidationError(msg))
     }
 
 }
