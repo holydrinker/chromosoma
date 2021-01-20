@@ -55,14 +55,14 @@ object GenerationUtils {
 
   /**
     * Select a pseudo-random rule
-    * @param flag the "pseudo" in "pseudo-random"
+    * @param seed the "pseudo" in "pseudo-random"
     * @param rules the rules
     * @return the selected rule
     */
-  def selectRule[R <: Rule](flag: Double, rules: List[R]): Rule = {
+  def selectRule[R <: Rule](seed: Double, rules: List[R]): Rule = {
     val slots = rangeRulesToSlots(rules)
     slots
-      .dropWhile(flag > _.slotUpperBound)
+      .dropWhile(seed > _.slotUpperBound)
       .head
       .rule
   }

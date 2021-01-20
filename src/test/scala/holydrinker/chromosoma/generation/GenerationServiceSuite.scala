@@ -25,13 +25,6 @@ class GenerationServiceSuite extends FunSuite {
   }
 
   test("Basic boolean generation") {
-    val trueValue = BooleanService.generate(
-      List(
-        BooleanRule(`false` = 0, `true` = 1)
-      )
-    )
-    assert(trueValue)
-
     val falseValue = GenerationService.generateBoolean(
       List(
         BooleanRule(`false` = 1, `true` = 0)

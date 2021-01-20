@@ -9,7 +9,7 @@ import org.apache.avro.Schema
   * Represents a feature of the target dataset's schema.
   *
   * @param name feature's name
-  * @param dataType feature's tyepe
+  * @param dataType feature's type
   * @param rules feature's generation rules
   */
 case class ChromoField(name: String, dataType: ChromoType, rules: List[Rule] = List.empty[Rule])
