@@ -39,6 +39,18 @@ object ChromoSchema {
   }
 
   /**
+    * Can create a [[ChromoSchema]] from a list of [[ChromoField]].
+    * A schema is built only if the semantics of each field makes sense.
+    *
+    * @param fields fields written with correct syntax
+    * @return fields with correct semantics
+    */
+  def fromFields(fields: List[ChromoField]): Validated[ValidationError, ChromoSchema] = {
+    val schema = ParsedChromoSchema(fields)
+    ValidationService.validate(schema)
+  }
+
+  /**
     * Converts a [[ChromoSchema]] to an Avro [[Schema]]
     * @param chromoSchema chromo schema
     * @return avro schema
