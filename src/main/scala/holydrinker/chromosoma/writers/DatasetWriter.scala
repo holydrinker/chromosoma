@@ -14,7 +14,8 @@ trait DatasetWriter extends ChromoLogger {
     * @param path the path
     */
   def save(dataset: Dataset, path: String): Unit = {
-    saveFile(dataset, path)
+    val extensionPath = makeExtensionPath(path)
+    saveFile(dataset, extensionPath)
     logInfo(s"File saved: $path.$extension")
   }
 
@@ -29,15 +30,27 @@ trait DatasetWriter extends ChromoLogger {
     * Specify the extension of the file to be written.
     * @return the extension
     */
-  def extension: String
+  protected def extension: String
+
+  /**
+    * Ensures that the path ends with the extension.
+    * For example myfile.csv
+    * @param path
+    * @return
+    */
+  protected def makeExtensionPath(path: String): String =
+    if (!path.endsWith(extension))
+      s"$path.$extension"
+    else
+      path
 
 }
 
 object DatasetWriter {
 
   def apply(format: String): DatasetWriter = format match {
-    case "avro" => new AvroWriter
-    case "csv"  => new CsvWriter
+    case Format.Avro => new AvroWriter
+    case Format.Csv  => new CsvWriter
   }
 
 }

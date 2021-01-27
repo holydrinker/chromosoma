@@ -1,7 +1,7 @@
 package holydrinker.chromosoma.model
 
 import cats.data.Validated
-import holydrinker.chromosoma.error.ValidationError
+import holydrinker.chromosoma.error.ChromoError
 import holydrinker.chromosoma.parser.{ ParsedChromoField, ParsedChromoSchema, ValidationService }
 import org.apache.avro.Schema
 
@@ -33,7 +33,7 @@ object ChromoSchema {
     * @param fields fields written with correct syntax
     * @return fields with correct semantics
     */
-  def fromFields(fields: List[ParsedChromoField]): Validated[ValidationError, ChromoSchema] = {
+  def fromFields(fields: List[ParsedChromoField]): Validated[ChromoError, ChromoSchema] = {
     val schema = ParsedChromoSchema(fields)
     ValidationService.validate(schema)
   }

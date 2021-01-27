@@ -2,6 +2,7 @@ package holydrinker.chromosoma.model
 
 import cats.data.Validated
 import cats.data.Validated.Valid
+import holydrinker.chromosoma.error.ChromoError
 import holydrinker.chromosoma.generation.GenerationService
 import holydrinker.chromosoma.logging.ChromoLogger
 import holydrinker.chromosoma.writers.DatasetWriter
@@ -14,7 +15,17 @@ import org.apache.avro.generic.{ GenericData, GenericRecord }
   * @param rows rows information
   * @param schema columns information
   */
-case class Dataset(rows: Seq[GenericRecord], schema: Schema)
+case class Dataset(rows: Seq[GenericRecord], schema: Schema) {
+
+  /**
+    * Dumps the dataset leveraging the underlying API of the [[DatasetWriter]]
+    * @param format
+    * @param path
+    */
+  def save(format: String, path: String): Unit =
+    DatasetWriter(format).save(this, path)
+
+}
 
 /**
   * Exposes utilities to work with [[Dataset]]
@@ -28,10 +39,10 @@ object Dataset extends ChromoLogger {
     * @param instances number of instances
     * @return the [[Dataset]]
     */
-  def fromSchema(chromoSchema: ChromoSchema, instances: Int): Validated[String, Dataset] = {
+  def fromSchema(chromoSchema: ChromoSchema, instances: Long): Validated[ChromoError, Dataset] = {
     logInfo("Apply generation rules")
     val avroSchema = ChromoSchema.toAvroSchema(chromoSchema)
-    val rows       = (0 to instances).map(_ => makeGenericRecord(chromoSchema, avroSchema))
+    val rows       = (0 until instances.toInt).map(_ => makeGenericRecord(chromoSchema, avroSchema))
     Valid(Dataset(rows, avroSchema))
   }
 

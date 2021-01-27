@@ -3,7 +3,7 @@ package holydrinker.chromosoma.parser
 import cats.data.Validated
 import cats.implicits._
 import holydrinker.chromosoma.model.{ ChromoBoolean, ChromoDecimal, ChromoField, ChromoInt, ChromoSchema, ChromoString }
-import holydrinker.chromosoma.error.ValidationError
+import holydrinker.chromosoma.error.ChromoError
 import holydrinker.chromosoma.logging.ChromoLogger
 
 /**
@@ -22,14 +22,14 @@ object ValidationService extends ChromoLogger {
     * @param schema schema with correct syntax
     * @return maybe the schema with correct semantics
     */
-  def validate(schema: ParsedChromoSchema): Validated[ValidationError, ChromoSchema] =
+  def validate(schema: ParsedChromoSchema): Validated[ChromoError, ChromoSchema] =
     schema.fields
       .traverse(validateSingleFieldType)
       .map(ChromoSchema(_))
       .flatMap(schema => SemanticsService.validateSchema(schema))
       .toValidated
 
-  private def validateSingleFieldType(field: ParsedChromoField): Either[ValidationError, ChromoField] =
+  private def validateSingleFieldType(field: ParsedChromoField): Either[ChromoError, ChromoField] =
     field match {
       case ParsedChromoField(name, IntType, rules) =>
         Right(ChromoField(name, ChromoInt, rules))
@@ -42,7 +42,7 @@ object ValidationService extends ChromoLogger {
       case ParsedChromoField(name, invalidType, _) =>
         val msg = s"Unknown type in field $name: $invalidType"
         logError(msg)
-        Left(ValidationError(msg))
+        Left(ChromoError(msg))
     }
 
 }
