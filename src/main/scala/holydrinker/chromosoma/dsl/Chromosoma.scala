@@ -1,51 +1,97 @@
 package holydrinker.chromosoma.dsl
 
-import holydrinker.chromosoma.model.{ChromoField, ChromoSchema, ChromoString, ChromoType, Dataset, Rule, StringSetRule}
+import holydrinker.chromosoma.error.{ ChromoError, ChromoMessages }
+import holydrinker.chromosoma.logging.ChromoLogger
+import holydrinker.chromosoma.model.{
+  ChromoField,
+  ChromoSchema,
+  ChromoString,
+  ChromoType,
+  Dataset,
+  Rule,
+  StringSetRule
+}
+import holydrinker.chromosoma.parser.SemanticsService
+import holydrinker.chromosoma.writers.Format
 
+/**
+  * Exposes APIs to start building datasets.
+  */
 object Chromosoma {
 
+  /**
+    * Specify the number of target instance of the dataset to build
+    * @param n the number of instances
+    * @return the builder
+    */
   def instances(n: Long): ChromosomaBuilder =
-    new ChromosomaBuilder(instances = n)
-
+    new ChromosomaBuilder(n, List.empty[ChromoField])
 }
 
+/**
+  * Builder object to incrementally build datasets
+  * @param instances number of rows to generate
+  * @param fields information about columns
+  */
 class ChromosomaBuilder(
     instances: Long,
-    fields: List[ChromoField] = List.empty[ChromoField]
-) {
+    fields: List[ChromoField]
+) extends ChromoLogger {
 
-  def withField(name: String, dataType: ChromoType, rules: List[Rule]) = {
-    val newField = ChromoField(
-      name = name,
-      dataType = dataType,
-      rules = rules
+  /**
+    * Adds a new field to the schema
+    *
+    * @param name the field name
+    * @param dataType the field type
+    * @param rules the field rules
+    * @return
+    */
+  def withField(
+      name: String,
+      dataType: ChromoType,
+      rules: List[Rule]
+  ): ChromosomaBuilder = {
+    val newField = ChromoField(name, dataType, rules)
+    new ChromosomaBuilder(
+      instances = this.instances,
+      fields = this.fields :+ newField
     )
-    new ChromosomaBuilder(instances = this.instances, fields = this.fields :+ newField)
   }
 
-  def generate(): Dataset = {
-    for {
-      schema <- ChromoSchema.fromFields(this.fields)
-
+  /**
+    * Safely generate the dataset
+    * @return maybe a [[Dataset]]
+    */
+  def generate(): Either[ChromoError, Dataset] =
+    if (this.fields.isEmpty) {
+      Left(ChromoError(ChromoMessages.cannotGenerate))
+    } else {
+      val schema = ChromoSchema(this.fields)
+      SemanticsService
+        .validateSchema(schema)
+        .flatMap(validSchema => Dataset.fromSchema(validSchema, this.instances).toEither)
     }
 
-    schema  <- ChromoSchema.fromFields(dna.fields)
-    dataset <- Dataset.fromSchema(schema, dna.instances)
-  }
+  /**
+    * Unsafely generate the dataset
+    * @return a [[Dataset]]
+    */
+  def generateUnsafe(): Dataset =
+    if (this.fields.isEmpty) {
+      throw ChromoError(ChromoMessages.cannotGenerate)
+    } else {
+      val maybeDataset =
+        SemanticsService
+          .validateSchema(ChromoSchema(this.fields))
+          .flatMap(validSchema => Dataset.fromSchema(validSchema, this.instances).toEither)
 
-}
-
-object Main {
-
-  def main(args: Array[String]): Unit =
-    Chromosoma
-      .instances(10L)
-      .withField(
-        name = "name",
-        dataType = ChromoString,
-        rules = List(
-          StringSetRule(values = Set("peppo", "paolo"), distribution = 1.0)
-        )
-      )
+      maybeDataset match {
+        case Right(dataset) =>
+          dataset
+        case Left(error) =>
+          logError(error.msg)
+          throw error
+      }
+    }
 
 }

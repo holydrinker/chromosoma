@@ -1,7 +1,7 @@
 package holydrinker.chromosoma.parser
 
 import cats.data.Validated.{ Invalid, Valid }
-import holydrinker.chromosoma.error.ValidationError
+import holydrinker.chromosoma.error.ChromoError
 import holydrinker.chromosoma.model.{
   BooleanRule,
   ChromoBoolean,
@@ -55,7 +55,7 @@ class ValidationServiceSuite extends FunSuite {
     )
 
     val actual   = ValidationService.validate(parsedSchema)
-    val expected = Invalid(ValidationError("Unknown type in field amazing_field: amazing_type"))
+    val expected = Invalid(ChromoError("Unknown type in field amazing_field: amazing_type"))
 
     assert(actual == expected)
   }

@@ -26,7 +26,7 @@ class CsvWriterSuite extends FunSuite with TempDirSupport {
       new CsvWriter(sep = ",").saveFile(artistDataset, resultPath)
 
       // Check dataset
-      val actualArtistSet = scala.io.Source.fromFile(s"$resultPath.csv").getLines().toSet
+      val actualArtistSet = scala.io.Source.fromFile(s"$resultPath").getLines().toSet
 
       val expectedArtistSet = Set(
         "simon,neil,41,guitar",
