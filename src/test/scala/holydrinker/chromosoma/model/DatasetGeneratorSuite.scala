@@ -1,10 +1,9 @@
 package holydrinker.chromosoma.model
 
-import custom.{StmInterruption, StmRecordGenerator}
-import holydrinker.chromosoma.generation.DatasetGenerator
+import holydrinker.chromosoma.generation.{DatasetGenerator, StmRecordGenerator}
 import munit.FunSuite
 
-class DatasetSuite extends FunSuite {
+class DatasetGeneratorSuite extends FunSuite {
 
   test("simple schema with one range rule") {
     val stmFieldsfields = List(

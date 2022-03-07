@@ -1,16 +1,8 @@
-package custom
-
-import holydrinker.chromosoma.model.{Rule, StringSetRule}
+package holydrinker.chromosoma.model
 
 trait GenericCaseClass
-case class FieldRules(fieldName: String, rules: List[Rule])
 
-case class StmInterruption(id: String, idCo: String) extends GenericCaseClass {
-  val stmInterruptionRules = List(
-
-  )
-}
-
+case class StmInterruption(id: String, idCo: String) extends GenericCaseClass
 //define rules for Stm Interruption
 object StmInterruption extends StmInterruption("id", "idCo")
 

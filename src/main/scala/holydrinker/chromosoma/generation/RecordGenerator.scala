@@ -1,7 +1,6 @@
-package custom
+package holydrinker.chromosoma.generation
 
-import holydrinker.chromosoma.generation.GenerationService
-import holydrinker.chromosoma.model.{ChromoField, ChromoInt, ChromoSchema, ChromoString}
+import holydrinker.chromosoma.model.{ChromoField, ChromoSchema, ChromoString, StmInterruption}
 
 import scala.annotation.tailrec
 

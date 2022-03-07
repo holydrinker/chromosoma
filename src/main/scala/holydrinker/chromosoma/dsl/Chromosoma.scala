@@ -1,10 +1,9 @@
 package holydrinker.chromosoma.dsl
 
-import custom.{GenericCaseClass, RecordGenerator}
 import holydrinker.chromosoma.error.{ChromoError, ChromoMessages}
 import holydrinker.chromosoma.generation.DatasetGenerator
 import holydrinker.chromosoma.logging.ChromoLogger
-import holydrinker.chromosoma.model.{ChromoField, ChromoSchema, ChromoString, ChromoType, Dataset, Rule, StringSetRule}
+import holydrinker.chromosoma.model.{ChromoField, ChromoSchema, ChromoString, ChromoType, Dataset, GenericCaseClass, Rule, StringSetRule}
 import holydrinker.chromosoma.parser.SemanticsService
 
 
@@ -18,6 +17,8 @@ class ChromosomaBuilder[T <: GenericCaseClass](
     fields: List[ChromoField],
     datasetGenerator: DatasetGenerator[T]
 ) extends ChromoLogger {
+
+  //TODO: customize it based on telecontrol use cases
 
   /**
     * Adds a new field to the schema

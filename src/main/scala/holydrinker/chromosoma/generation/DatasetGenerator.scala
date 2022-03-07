@@ -2,10 +2,9 @@ package holydrinker.chromosoma.generation
 
 import cats.data.Validated
 import cats.data.Validated.Valid
-import custom.{GenericCaseClass, RecordGenerator}
 import holydrinker.chromosoma.error.ChromoError
 import holydrinker.chromosoma.logging.ChromoLogger
-import holydrinker.chromosoma.model.{ChromoSchema, Dataset}
+import holydrinker.chromosoma.model.{ChromoSchema, Dataset, GenericCaseClass}
 
 /**
   * Exposes utilities to work with [[Dataset]]
