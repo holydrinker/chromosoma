@@ -38,34 +38,4 @@ object ChromoSchema {
     ValidationService.validate(schema)
   }
 
-  /**
-    * Converts a [[ChromoSchema]] to an Avro [[Schema]]
-    * @param chromoSchema chromo schema
-    * @return avro schema
-    */
-  def toAvroSchema(chromoSchema: ChromoSchema): Schema = {
-    val fieldTemplate = "{\"name\": \"%s\", \"type\": \"%s\"}"
-    val fields = chromoSchema.fields
-      .map {
-        case ChromoField(name, ChromoString, _) =>
-          fieldTemplate.format(name, "string")
-        case ChromoField(name, ChromoDecimal, _) =>
-          fieldTemplate.format(name, "double")
-        case ChromoField(name, ChromoInt, _) =>
-          fieldTemplate.format(name, "int")
-        case ChromoField(name, ChromoBoolean, _) =>
-          fieldTemplate.format(name, "boolean")
-      }
-      .mkString(", ")
-
-    val rowSchema =
-      s"""{
-        |"type": "record", 
-        |"name": "chromorecord", 
-        |"fields": [$fields]
-        |}""".stripMargin
-
-    new Schema.Parser().parse(rowSchema)
-  }
-
 }

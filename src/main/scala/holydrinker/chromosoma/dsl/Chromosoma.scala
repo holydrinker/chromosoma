@@ -1,41 +1,22 @@
 package holydrinker.chromosoma.dsl
 
-import holydrinker.chromosoma.error.{ ChromoError, ChromoMessages }
+import custom.{GenericCaseClass, RecordGenerator}
+import holydrinker.chromosoma.error.{ChromoError, ChromoMessages}
+import holydrinker.chromosoma.generation.DatasetGenerator
 import holydrinker.chromosoma.logging.ChromoLogger
-import holydrinker.chromosoma.model.{
-  ChromoField,
-  ChromoSchema,
-  ChromoString,
-  ChromoType,
-  Dataset,
-  Rule,
-  StringSetRule
-}
+import holydrinker.chromosoma.model.{ChromoField, ChromoSchema, ChromoString, ChromoType, Dataset, Rule, StringSetRule}
 import holydrinker.chromosoma.parser.SemanticsService
-import holydrinker.chromosoma.writers.Format
 
-/**
-  * Exposes APIs to start building datasets.
-  */
-object Chromosoma {
-
-  /**
-    * Specify the number of target instance of the dataset to build
-    * @param n the number of instances
-    * @return the builder
-    */
-  def instances(n: Long): ChromosomaBuilder =
-    new ChromosomaBuilder(n, List.empty[ChromoField])
-}
 
 /**
   * Builder object to incrementally build datasets
   * @param instances number of rows to generate
   * @param fields information about columns
   */
-class ChromosomaBuilder(
+class ChromosomaBuilder[T <: GenericCaseClass](
     instances: Long,
-    fields: List[ChromoField]
+    fields: List[ChromoField],
+    datasetGenerator: DatasetGenerator[T]
 ) extends ChromoLogger {
 
   /**
@@ -50,11 +31,12 @@ class ChromosomaBuilder(
       name: String,
       dataType: ChromoType,
       rules: List[Rule]
-  ): ChromosomaBuilder = {
+  ): ChromosomaBuilder[T] = {
     val newField = ChromoField(name, dataType, rules)
     new ChromosomaBuilder(
       instances = this.instances,
-      fields = this.fields :+ newField
+      fields = this.fields :+ newField,
+      datasetGenerator = this.datasetGenerator
     )
   }
 
@@ -69,21 +51,21 @@ class ChromosomaBuilder(
       val schema = ChromoSchema(this.fields)
       SemanticsService
         .validateSchema(schema)
-        .flatMap(validSchema => Dataset.fromSchema(validSchema, this.instances).toEither)
+        .flatMap(validSchema => datasetGenerator.fromSchema(validSchema, this.instances).toEither)
     }
 
   /**
     * Unsafely generate the dataset
     * @return a [[Dataset]]
     */
-  def generateUnsafe(): Dataset =
+  def generateUnsafe(): Dataset = ???
     if (this.fields.isEmpty) {
       throw ChromoError(ChromoMessages.cannotGenerate)
     } else {
       val maybeDataset =
         SemanticsService
           .validateSchema(ChromoSchema(this.fields))
-          .flatMap(validSchema => Dataset.fromSchema(validSchema, this.instances).toEither)
+          .flatMap(validSchema => datasetGenerator.fromSchema(validSchema, this.instances).toEither)
 
       maybeDataset match {
         case Right(dataset) =>

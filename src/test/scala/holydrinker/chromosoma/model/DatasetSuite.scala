@@ -1,53 +1,35 @@
 package holydrinker.chromosoma.model
 
+import custom.{StmInterruption, StmRecordGenerator}
+import holydrinker.chromosoma.generation.DatasetGenerator
 import munit.FunSuite
 
 class DatasetSuite extends FunSuite {
 
   test("simple schema with one range rule") {
-    val fields = List(
+    val stmFieldsfields = List(
       ChromoField(
-        "name",
+        "id",
         ChromoString,
         List(
-          StringSetRule(Set("dave", "simone"), 1.0)
+          StringSetRule(Set("id001", "id002"), 1.0)
         )
       ),
       ChromoField(
-        "age",
-        ChromoInt,
+        "idCo",
+        ChromoString,
         List(
-          RangeRule(0, 10, 1.0)
-        )
-      ),
-      ChromoField(
-        "budget",
-        ChromoDecimal,
-        List(
-          RangeRule(0, 10, 1.0)
-        )
-      ),
-      ChromoField(
-        "married",
-        ChromoBoolean,
-        List(
-          BooleanRule(`true` = 1, `false` = 0)
+          StringSetRule(Set("idCo001", "idCo002"), 1.0)
         )
       )
     )
 
-    val schema = ChromoSchema(fields)
-    val n      = 1
+    val schema = ChromoSchema(stmFieldsfields)
+    val n      = 10
 
-    val result: Dataset = Dataset.fromSchema(schema, n).toOption.get
+    val result: Dataset = new DatasetGenerator[StmInterruption](new StmRecordGenerator).fromSchema(schema, n).toOption.get
 
-    val age     = result.rows.head.get("age").asInstanceOf[Int]
-    val budget  = result.rows.head.get("budget").asInstanceOf[Double]
-    val married = result.rows.head.get("married").asInstanceOf[Boolean]
-
-    assert(age >= 0 && age <= 10)
-    assert(budget >= 0 && budget <= 10)
-    assert(married)
+    result.rows.foreach(println)
   }
 
 }
